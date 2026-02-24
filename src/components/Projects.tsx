@@ -26,7 +26,7 @@ export default function Projects({ onViewHostProject }: ProjectsProps) {
         "Service Enumeration",
         "OS Detection",
       ],
-      githubLink: "https://github.com/Lokesh-2403/self-host-network-recon",
+      githubLink: "https://github.com/Lokesh-2403/host-based-reconnaissance", // Updated link
     },
     {
       title: "Endpoint Security Monitoring",
@@ -149,18 +149,14 @@ export default function Projects({ onViewHostProject }: ProjectsProps) {
                     className="flex items-center gap-2 px-4 py-2 bg-accent-cyan/10 text-accent-cyan rounded-lg border border-accent-cyan/20 hover:bg-accent-cyan hover:text-primary-bg transition-all duration-300"
                   >
                     <ExternalLink className="w-4 h-4" />
-                    <span className="text-sm font-medium">
-                      View Details
-                    </span>
+                    <span className="text-sm font-medium">View Details</span>
                   </button>
                 ) : (
                   <button
                     className="flex items-center gap-2 px-4 py-2 bg-accent-cyan/10 text-accent-cyan rounded-lg border border-accent-cyan/20 opacity-50 cursor-not-allowed"
                   >
                     <ExternalLink className="w-4 h-4" />
-                    <span className="text-sm font-medium">
-                      View Details
-                    </span>
+                    <span className="text-sm font-medium">View Details</span>
                   </button>
                 )}
 
