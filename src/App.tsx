@@ -11,9 +11,10 @@ import Footer from "./components/Footer";
 
 // ✅ Correct import (since file is directly inside pages)
 import HostBasedProject from "./pages/HostBasedProject";
+import WindowsEventLogProject from "./pages/WindowsEventLogProject";
 
 function App() {
-  const [activePage, setActivePage] = useState<"home" | "host">("home");
+  const [activePage, setActivePage] = useState<"home" | "host" | "windows">("home");
 
   return (
     <div className="relative min-h-screen bg-secondary-bg font-inter">
@@ -28,7 +29,10 @@ function App() {
             <Hero />
             <About />
             <Skills />
-            <Projects onViewHostProject={() => setActivePage("host")} />
+            <Projects
+              onViewHostProject={() => setActivePage("host")}
+              onViewWindowsProject={() => setActivePage("windows")}
+            />
             <Certifications />
             <Contact />
             <Resume />
@@ -44,8 +48,19 @@ function App() {
             >
               ← Back to Home
             </button>
-
             <HostBasedProject />
+          </>
+        )}
+
+        {activePage === "windows" && (
+          <>
+            <button
+              onClick={() => setActivePage("home")}
+              className="text-cyan-400 px-6 pt-6 hover:text-cyan-300 transition-colors"
+            >
+              ← Back to Home
+            </button>
+            <WindowsEventLogProject />
           </>
         )}
 

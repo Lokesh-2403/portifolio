@@ -10,9 +10,10 @@ interface Project {
 
 interface ProjectsProps {
   onViewHostProject: () => void;
+  onViewWindowsProject: () => void;
 }
 
-export default function Projects({ onViewHostProject }: ProjectsProps) {
+export default function Projects({ onViewHostProject, onViewWindowsProject }: ProjectsProps) {
   const projects: Project[] = [
     {
       title: "Host-Based Network Reconnaissance & Service Enumeration",
@@ -26,7 +27,7 @@ export default function Projects({ onViewHostProject }: ProjectsProps) {
         "Service Enumeration",
         "OS Detection",
       ],
-      githubLink: "https://github.com/Lokesh-2403/host-based-reconnaissance", // Updated link
+      githubLink: "https://github.com/Lokesh-2403/host-based-reconnaissance",
     },
     {
       title: "Endpoint Security Monitoring",
@@ -51,15 +52,16 @@ export default function Projects({ onViewHostProject }: ProjectsProps) {
       githubLink: "https://github.com/Lokesh-2403/ssh-brute-force",
     },
     {
-      title: "Windows Failed Login Investigation Tool",
-      status: "Planned",
+      title: "Windows Security Event Log Analysis & Threat Detection",
+      status: "Completed",
       description:
-        "Analyze Windows Security Event Logs to detect repeated failed login attempts and identify potential brute-force activity.",
+        "Investigated 881 security events across 5 critical Event IDs on a Windows lab machine. Detected failed login attempts, analyzed service logon activity, and monitored process creation events. Findings documented in a professional SOC-style incident report.",
       tags: [
-        "Windows VM",
-        "PowerShell",
-        "Event Viewer",
-        "Security Event Logs (4625)",
+        "Windows Event Viewer",
+        "Log Analysis",
+        "Threat Detection",
+        "SOC Operations",
+        "Incident Reporting",
       ],
       githubLink: "https://github.com/Lokesh-2403/windows-login",
     },
@@ -142,10 +144,17 @@ export default function Projects({ onViewHostProject }: ProjectsProps) {
               </div>
 
               <div className="flex gap-4">
-                {/* 🔥 Special logic for first project */}
                 {index === 0 ? (
                   <button
                     onClick={onViewHostProject}
+                    className="flex items-center gap-2 px-4 py-2 bg-accent-cyan/10 text-accent-cyan rounded-lg border border-accent-cyan/20 hover:bg-accent-cyan hover:text-primary-bg transition-all duration-300"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    <span className="text-sm font-medium">View Details</span>
+                  </button>
+                ) : index === 3 ? (
+                  <button
+                    onClick={onViewWindowsProject}
                     className="flex items-center gap-2 px-4 py-2 bg-accent-cyan/10 text-accent-cyan rounded-lg border border-accent-cyan/20 hover:bg-accent-cyan hover:text-primary-bg transition-all duration-300"
                   >
                     <ExternalLink className="w-4 h-4" />
@@ -160,7 +169,6 @@ export default function Projects({ onViewHostProject }: ProjectsProps) {
                   </button>
                 )}
 
-                {/* GitHub */}
                 <a
                   href={project.githubLink || "#"}
                   target="_blank"
