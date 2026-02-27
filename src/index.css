@@ -35,3 +35,7 @@
     @apply bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm;
   }
 }
+@keyframes portfolioFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}

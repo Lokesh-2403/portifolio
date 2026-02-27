@@ -18,8 +18,11 @@ function App() {
   const [activePage, setActivePage] = useState<"home" | "host" | "windows">("home");
 
   return (
-    <div className="relative min-h-screen bg-secondary-bg font-inter">
-      
+    <div
+      className="relative min-h-screen bg-secondary-bg font-inter"
+      style={{ animation: "portfolioFadeIn 0.8s ease forwards" }}
+    >
+
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
 

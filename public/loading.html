@@ -72,6 +72,19 @@
     .corner-bl { bottom: 20px; left: 20px; transform: scaleY(-1); }
     .corner-br { bottom: 20px; right: 20px; transform: scale(-1); }
 
+    /* ── BLACK FADE OVERLAY ── */
+    /* This sits on top of everything and fades IN to black before redirect */
+    #fade-overlay {
+      position: fixed; inset: 0; z-index: 100;
+      background: #000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+    }
+    #fade-overlay.fade-in {
+      opacity: 1;
+    }
+
     /* ── STAGE ── */
     #stage {
       position: fixed; inset: 0; z-index: 10;
@@ -79,6 +92,14 @@
       align-items: center; justify-content: center;
       transform-origin: center center;
       will-change: transform, opacity;
+      transition: transform 0.8s cubic-bezier(.4,0,1,1),
+                  opacity 0.8s ease;
+    }
+
+    /* Stage zooms IN smoothly */
+    #stage.zoom-in {
+      transform: scale(16);
+      opacity: 0;
     }
 
     /* ── SHIELD ── */
@@ -155,12 +176,12 @@
     .t-line.success { color: rgba(0,229,255,.55); }
     .t-line.access  { color: var(--cyan); font-size: .82rem; letter-spacing: .05em; }
 
-    .t-line:nth-child(1) { animation: lineIn .05s 1.3s forwards; }
-    .t-line:nth-child(2) { animation: lineIn .05s 1.8s forwards; }
-    .t-line:nth-child(3) { animation: lineIn .05s 2.3s forwards; }
-    .t-line:nth-child(4) { animation: lineIn .05s 2.8s forwards; }
-    .t-line:nth-child(5) { animation: lineIn .05s 3.2s forwards; }
-    .t-line:nth-child(6) { animation: lineIn .05s 3.6s forwards; }
+    .t-line:nth-child(1) { animation: lineIn .05s 0.7s forwards; }
+    .t-line:nth-child(2) { animation: lineIn .05s 1.1s forwards; }
+    .t-line:nth-child(3) { animation: lineIn .05s 1.5s forwards; }
+    .t-line:nth-child(4) { animation: lineIn .05s 1.9s forwards; }
+    .t-line:nth-child(5) { animation: lineIn .05s 2.2s forwards; }
+    .t-line:nth-child(6) { animation: lineIn .05s 2.5s forwards; }
     @keyframes lineIn { to { opacity: 1; } }
 
     /* ── PROGRESS ── */
@@ -233,17 +254,6 @@
       box-shadow: 0 0 7px var(--cyan);
     }
 
-    /* ══════════════════════════════════════
-       ZOOM TRANSITION
-    ══════════════════════════════════════ */
-    #stage.zoom-in {
-      animation: stageZoomIn 1s cubic-bezier(.4,0,1,1) forwards;
-    }
-    @keyframes stageZoomIn {
-      0%   { transform: scale(1);  opacity: 1; }
-      100% { transform: scale(22); opacity: 0; }
-    }
-
     /* ── UTILS ── */
     @keyframes fadeUp {
       from { opacity:0; transform: translateY(14px); }
@@ -254,6 +264,9 @@
   </style>
 </head>
 <body>
+
+<!-- Black fade overlay — covers everything during redirect -->
+<div id="fade-overlay"></div>
 
 <!-- Matrix rain -->
 <canvas id="matrix-canvas"></canvas>
@@ -340,6 +353,9 @@
 
 </div><!-- /stage -->
 
+<!-- Also add a fade-in to the portfolio side -->
+<!-- This style tag gets injected into the portfolio via App.tsx — see instructions -->
+
 <script>
 /* ── MATRIX RAIN ── */
 const canvas = document.getElementById('matrix-canvas');
@@ -385,8 +401,8 @@ for (let i = 0; i < 40; i++) {
   ticksEl.appendChild(d);
 }
 
-const duration  = 4400;
-const startTime = performance.now() + 1300;
+const duration  = 2800;
+const startTime = performance.now() + 600;
 function ease(t) { return t < .5 ? 2*t*t : -1+(4-2*t)*t; }
 
 function tickProgress(now) {
@@ -412,26 +428,26 @@ function tickProgress(now) {
   if (raw < 1) {
     requestAnimationFrame(tickProgress);
   } else {
-    setTimeout(triggerTransition, 450);
+    setTimeout(triggerTransition, 150);
   }
 }
 requestAnimationFrame(tickProgress);
 
 /* ── TRANSITION ── */
 function triggerTransition() {
-  const stage = document.getElementById('stage');
+  const stage   = document.getElementById('stage');
+  const overlay = document.getElementById('fade-overlay');
 
-  // Set the flag HERE before redirecting
-  // So when main.tsx runs on the portfolio, it sees this and skips the loader redirect
-  sessionStorage.setItem('hasSeenLoader', 'true');
-
-  // Zoom the loading page IN
+  // Step 1: zoom the stage in (smooth CSS transition)
   stage.classList.add('zoom-in');
 
-  // After zoom finishes → redirect to portfolio
+  // Step 2: simultaneously fade entire page to black (kills any flicker)
+  overlay.classList.add('fade-in');
+
+  // Step 3: once fully black → redirect (user sees nothing, no flicker)
   setTimeout(() => {
     window.location.replace('https://lokeshbabu.vercel.app/?loaded=1');
-  }, 950);
+  }, 700);
 }
 </script>
 </body>
