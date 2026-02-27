@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Initializing... | Lokesh Babu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:    #000000;
+      --cyan:  #00e5ff;
+      --cyan2: #00b8d4;
+      --cyan3: #80deea;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--bg);
+      overflow: hidden;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    /* ── CANVAS BG ── */
+    #matrix-canvas {
+      position: fixed; inset: 0;
+      z-index: 0; opacity: .18;
+    }
+
+    /* ── SCAN LINE ── */
+    .scanline {
+      position: fixed; inset: 0; z-index: 1;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 3px,
+        rgba(0,229,255,.015) 3px, rgba(0,229,255,.015) 4px
+      );
+      pointer-events: none;
+    }
+
+    /* ── VIGNETTE ── */
+    .vignette {
+      position: fixed; inset: 0; z-index: 2;
+      background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.88) 100%);
+      pointer-events: none;
+    }
+
+    /* ── GRID LINES ── */
+    .grid-h {
+      position: fixed; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,229,255,.07), transparent);
+      z-index: 3; pointer-events: none;
+    }
+    .grid-h:nth-of-type(1) { top: 33%; }
+    .grid-h:nth-of-type(2) { top: 66%; }
+    .grid-v {
+      position: fixed; top: 0; bottom: 0; width: 1px;
+      background: linear-gradient(180deg, transparent, rgba(0,229,255,.07), transparent);
+      z-index: 3; pointer-events: none;
+    }
+    .grid-v:nth-of-type(3) { left: 33%; }
+    .grid-v:nth-of-type(4) { left: 66%; }
+
+    /* ── CORNER BRACKETS ── */
+    .corner {
+      position: fixed; z-index: 5;
+      width: 50px; height: 50px; pointer-events: none;
+    }
+    .corner svg { width: 100%; height: 100%; }
+    .corner-tl { top: 20px; left: 20px; }
+    .corner-tr { top: 20px; right: 20px; transform: scaleX(-1); }
+    .corner-bl { bottom: 20px; left: 20px; transform: scaleY(-1); }
+    .corner-br { bottom: 20px; right: 20px; transform: scale(-1); }
+
+    /* ── STAGE ── */
+    #stage {
+      position: fixed; inset: 0; z-index: 10;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      transform-origin: center center;
+      will-change: transform, opacity;
+    }
+
+    /* ── SHIELD ── */
+    .shield-wrap {
+      position: relative;
+      width: 120px; height: 120px;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: shieldAppear .8s .2s cubic-bezier(.22,1,.36,1) forwards;
+    }
+    @keyframes shieldAppear {
+      from { opacity: 0; transform: scale(.55) rotate(-12deg); }
+      to   { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+    .shield-svg {
+      width: 100%; height: 100%;
+      filter: drop-shadow(0 0 16px var(--cyan)) drop-shadow(0 0 36px rgba(0,229,255,.28));
+    }
+    .orbit-ring {
+      position: absolute; inset: -16px;
+      border: 1px solid rgba(0,229,255,.22);
+      border-radius: 50%;
+      border-top-color: var(--cyan);
+      animation: spin 3s linear infinite;
+    }
+    .orbit-ring2 {
+      position: absolute; inset: -28px;
+      border: 1px dashed rgba(0,229,255,.1);
+      border-radius: 50%;
+      animation: spin 7s linear infinite reverse;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── NAME ── */
+    .name-block {
+      text-align: center;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp .6s .85s ease forwards;
+    }
+    .name-main {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: clamp(2.4rem, 5.5vw, 3.8rem);
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: .2em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+    .name-main .c { color: var(--cyan); }
+    .name-sub {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .7rem;
+      color: var(--cyan3);
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      margin-top: .5rem;
+    }
+
+    /* ── TERMINAL LINES ── */
+    .terminal-block {
+      width: min(480px, 90vw);
+      margin-bottom: 2rem;
+    }
+    .t-line {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .75rem;
+      line-height: 2;
+      opacity: 0;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .t-line.prompt  { color: var(--cyan); }
+    .t-line.success { color: rgba(0,229,255,.55); }
+    .t-line.access  { color: var(--cyan); font-size: .82rem; letter-spacing: .05em; }
+
+    .t-line:nth-child(1) { animation: lineIn .05s 1.3s forwards; }
+    .t-line:nth-child(2) { animation: lineIn .05s 1.8s forwards; }
+    .t-line:nth-child(3) { animation: lineIn .05s 2.3s forwards; }
+    .t-line:nth-child(4) { animation: lineIn .05s 2.8s forwards; }
+    .t-line:nth-child(5) { animation: lineIn .05s 3.2s forwards; }
+    .t-line:nth-child(6) { animation: lineIn .05s 3.6s forwards; }
+    @keyframes lineIn { to { opacity: 1; } }
+
+    /* ── PROGRESS ── */
+    .progress-wrap {
+      width: min(480px, 90vw);
+      opacity: 0;
+      animation: fadeUp .4s 1.4s ease forwards;
+    }
+    .progress-meta {
+      display: flex; justify-content: space-between;
+      margin-bottom: .5rem;
+    }
+    .progress-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .62rem; color: var(--cyan3);
+      letter-spacing: .16em; text-transform: uppercase;
+    }
+    .progress-pct {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: .95rem; font-weight: 700;
+      color: var(--cyan); letter-spacing: .05em;
+    }
+    .progress-track {
+      height: 2px; background: rgba(0,229,255,.1);
+      border-radius: 2px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan2), var(--cyan), var(--cyan3));
+      width: 0%; border-radius: 2px;
+      transition: width .08s linear;
+      box-shadow: 0 0 10px var(--cyan), 0 0 22px rgba(0,229,255,.35);
+      position: relative;
+    }
+    .progress-fill::after {
+      content: '';
+      position: absolute; right: -1px; top: -2px;
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--cyan3);
+      box-shadow: 0 0 6px var(--cyan), 0 0 12px var(--cyan);
+    }
+    .progress-ticks {
+      display: flex; justify-content: space-between;
+      margin-top: .4rem;
+    }
+    .tick { width: 1px; height: 4px; background: rgba(0,229,255,.15); }
+
+    /* ── STATUS DOTS ── */
+    .status-row {
+      display: flex; gap: 1.8rem;
+      margin-top: 1.4rem;
+      opacity: 0;
+      animation: fadeUp .4s 1.5s ease forwards;
+    }
+    .status-item {
+      display: flex; align-items: center; gap: .45rem;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .58rem; color: rgba(0,229,255,.25);
+      letter-spacing: .1em; text-transform: uppercase;
+      transition: color .4s;
+    }
+    .status-item.active { color: var(--cyan); }
+    .s-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(0,229,255,.15);
+      transition: background .4s, box-shadow .4s;
+    }
+    .status-item.active .s-dot {
+      background: var(--cyan);
+      box-shadow: 0 0 7px var(--cyan);
+    }
+
+    /* ══════════════════════════════════════
+       ZOOM TRANSITION
+    ══════════════════════════════════════ */
+
+    /* Stage zooms IN — expands to fill & fades */
+    #stage.zoom-in {
+      animation: stageZoomIn 1.1s cubic-bezier(.4,0,1,1) forwards;
+    }
+    @keyframes stageZoomIn {
+      0%   { transform: scale(1);  opacity: 1; }
+      100% { transform: scale(22); opacity: 0; }
+    }
+
+    /* Portfolio iframe — starts zoomed in (large), animates OUT to normal size */
+    #portfolio-frame {
+      position: fixed; inset: 0; z-index: 8;
+      width: 100%; height: 100%;
+      border: none;
+      transform: scale(6);
+      transform-origin: center center;
+      opacity: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+    #portfolio-frame.zoom-out {
+      transition: transform 1.1s cubic-bezier(.16,1,.3,1), opacity .25s ease;
+      transform: scale(1);
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* ── UTILS ── */
+    @keyframes fadeUp {
+      from { opacity:0; transform: translateY(14px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    .blink { animation: blink .9s infinite; }
+  </style>
+</head>
+<body>
+
+<!-- Matrix rain -->
+<canvas id="matrix-canvas"></canvas>
+
+<!-- Atmospheric layers -->
+<div class="scanline"></div>
+<div class="vignette"></div>
+
+<!-- Grid -->
+<div class="grid-h"></div>
+<div class="grid-h"></div>
+<div class="grid-v"></div>
+<div class="grid-v"></div>
+
+<!-- Corner brackets -->
+<div class="corner corner-tl">
+  <svg viewBox="0 0 50 50" fill="none"><path d="M2 22 L2 2 L22 2" stroke="#00e5ff" stroke-width="1.5" opacity=".55"/><path d="M2 2 L7 7" stroke="#00e5ff" stroke-width=".6" opacity=".25"/></svg>
+</div>
+<div class="corner corner-tr">
+  <svg viewBox="0 0 50 50" fill="none"><path d="M2 22 L2 2 L22 2" stroke="#00e5ff" stroke-width="1.5" opacity=".55"/></svg>
+</div>
+<div class="corner corner-bl">
+  <svg viewBox="0 0 50 50" fill="none"><path d="M2 22 L2 2 L22 2" stroke="#00e5ff" stroke-width="1.5" opacity=".55"/></svg>
+</div>
+<div class="corner corner-br">
+  <svg viewBox="0 0 50 50" fill="none"><path d="M2 22 L2 2 L22 2" stroke="#00e5ff" stroke-width="1.5" opacity=".55"/></svg>
+</div>
+
+<!-- Portfolio iframe — preloading silently behind loader -->
+<iframe id="portfolio-frame" src="https://lokeshbabu.vercel.app" title="Lokesh Babu Portfolio"></iframe>
+
+<!-- ══ LOADING STAGE ══ -->
+<div id="stage">
+
+  <!-- Shield -->
+  <div class="shield-wrap">
+    <div class="orbit-ring2"></div>
+    <div class="orbit-ring"></div>
+    <svg class="shield-svg" viewBox="0 0 100 110" fill="none">
+      <path d="M50 4 L92 20 L92 58 C92 80 72 98 50 106 C28 98 8 80 8 58 L8 20 Z"
+        fill="none" stroke="#00e5ff" stroke-width="1.5" opacity=".9"/>
+      <path d="M50 12 L84 26 L84 58 C84 76 67 92 50 100 C33 92 16 76 16 58 L16 26 Z"
+        fill="rgba(0,229,255,0.04)" stroke="#00e5ff" stroke-width=".6" opacity=".45"/>
+      <rect x="38" y="52" width="24" height="18" rx="2" fill="none" stroke="#00e5ff" stroke-width="1.5"/>
+      <path d="M43 52 L43 46 C43 41.5 57 41.5 57 46 L57 52"
+        fill="none" stroke="#00e5ff" stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="50" cy="61" r="2.5" fill="#00e5ff"/>
+      <line x1="50" y1="63.5" x2="50" y2="67" stroke="#00e5ff" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <!-- Name -->
+  <div class="name-block">
+    <div class="name-main">LOKESH &nbsp;<span class="c">BABU</span></div>
+    <div class="name-sub">SOC Analyst &nbsp;·&nbsp; Cybersecurity</div>
+  </div>
+
+  <!-- Terminal -->
+  <div class="terminal-block">
+    <div class="t-line prompt">$ ./authenticate --user=visitor --clearance=L1</div>
+    <div class="t-line success">  ▸ Verifying digital signature ......... <span style="color:#00e5ff">OK</span></div>
+    <div class="t-line success">  ▸ Running threat intelligence scan .... <span style="color:#00e5ff">CLEAN</span></div>
+    <div class="t-line success">  ▸ Establishing encrypted tunnel ........ <span style="color:#00e5ff">ACTIVE</span></div>
+    <div class="t-line success">  ▸ Loading portfolio modules ........... <span style="color:#00e5ff">DONE</span></div>
+    <div class="t-line access">  ✔ ACCESS GRANTED — Launching portfolio <span class="blink">_</span></div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <div class="progress-meta">
+      <span class="progress-label">System Initializing</span>
+      <span class="progress-pct" id="pct-label">0%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="prog-fill"></div>
+    </div>
+    <div class="progress-ticks" id="ticks"></div>
+  </div>
+
+  <!-- Status -->
+  <div class="status-row">
+    <div class="status-item" id="s1"><div class="s-dot"></div>Firewall</div>
+    <div class="status-item" id="s2"><div class="s-dot"></div>Encrypt</div>
+    <div class="status-item" id="s3"><div class="s-dot"></div>Auth</div>
+    <div class="status-item" id="s4"><div class="s-dot"></div>Deploy</div>
+  </div>
+
+</div><!-- /stage -->
+
+<script>
+/* ── MATRIX RAIN ── */
+const canvas = document.getElementById('matrix-canvas');
+const ctx    = canvas.getContext('2d');
+let cols, drops;
+
+function initMatrix() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  cols  = Math.floor(canvas.width / 13);
+  drops = Array(cols).fill(1);
+}
+initMatrix();
+window.addEventListener('resize', initMatrix);
+
+const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:<>?/\\~`ΩΨΔΦΛΞΠΣΘλπσφ';
+function drawMatrix() {
+  ctx.fillStyle = 'rgba(0,0,0,0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.font = '13px "Share Tech Mono", monospace';
+  for (let i = 0; i < drops.length; i++) {
+    const char     = chars[Math.floor(Math.random() * chars.length)];
+    const progress = drops[i] / (canvas.height / 13);
+    const alpha    = Math.max(0.08, 1 - progress * 1.15);
+    ctx.fillStyle  = `rgba(0,229,255,${alpha})`;
+    ctx.fillText(char, i * 13, drops[i] * 13);
+    if (drops[i] * 13 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+    drops[i]++;
+  }
+}
+setInterval(drawMatrix, 40);
+
+/* ── PROGRESS BAR ── */
+const fillEl   = document.getElementById('prog-fill');
+const pctEl    = document.getElementById('pct-label');
+const ticksEl  = document.getElementById('ticks');
+const statuses = ['s1','s2','s3','s4'];
+const statusAt = [20, 45, 70, 90];
+
+for (let i = 0; i < 40; i++) {
+  const d = document.createElement('div');
+  d.className = 'tick';
+  ticksEl.appendChild(d);
+}
+
+const duration  = 4400;
+const startTime = performance.now() + 1300;
+function ease(t) { return t < .5 ? 2*t*t : -1+(4-2*t)*t; }
+
+function tickProgress(now) {
+  const elapsed = now - startTime;
+  if (elapsed < 0) { requestAnimationFrame(tickProgress); return; }
+
+  const raw = Math.min(elapsed / duration, 1);
+  const pct = Math.floor(ease(raw) * 100);
+
+  fillEl.style.width = pct + '%';
+  pctEl.textContent  = pct + '%';
+
+  statusAt.forEach((thresh, i) => {
+    if (pct >= thresh) document.getElementById(statuses[i])?.classList.add('active');
+  });
+
+  const activeTicks = Math.floor(pct / 100 * 40);
+  ticksEl.querySelectorAll('.tick').forEach((t, i) => {
+    t.style.background = i < activeTicks
+      ? 'rgba(0,229,255,.45)' : 'rgba(0,229,255,.12)';
+  });
+
+  if (raw < 1) {
+    requestAnimationFrame(tickProgress);
+  } else {
+    setTimeout(triggerTransition, 450);
+  }
+}
+requestAnimationFrame(tickProgress);
+
+/* ── TRANSITION: zoom-in loader simultaneously with zoom-out portfolio ── */
+function triggerTransition() {
+  const stage = document.getElementById('stage');
+  const frame = document.getElementById('portfolio-frame');
+
+  // Both fire at the exact same moment:
+  // - Loading page content zooms IN (expands and disappears)
+  // - Portfolio iframe zooms OUT (shrinks from large to natural size, appears)
+  stage.classList.add('zoom-in');
+  frame.classList.add('zoom-out');
+}
+</script>
+</body>
+</html>
