@@ -44,6 +44,14 @@ export default function Projects({ onViewHostProject, onViewWindowsProject }: Pr
       githubLink: "https://github.com/Lokesh-2403/windows-login",
     },
     {
+      title: "Linux SSH Brute Force Detection System",
+      status: "Completed",
+      description:
+        "Detect and analyze SSH brute-force attempts on a Linux server by monitoring authentication logs and extracting suspicious IP activity patterns.",
+      tags: ["Kali Linux", "Bash", "Python", "Regex", "Linux Auth Logs"],
+      githubLink: "https://github.com/Lokesh-2403/ssh-brute-force",
+    },
+    {
       title: "Endpoint Security Monitoring",
       status: "Underway",
       description:
@@ -57,13 +65,42 @@ export default function Projects({ onViewHostProject, onViewWindowsProject }: Pr
       ],
       githubLink: "https://github.com/Lokesh-2403/endpoint-security",
     },
-    {
-      title: "Linux SSH Brute Force Detection System",
+    
+     {
+      title: "Web Application Penetration Testing Lab",
       status: "Planned",
       description:
-        "Detect and analyze SSH brute-force attempts on a Linux server by monitoring authentication logs and extracting suspicious IP activity patterns.",
-      tags: ["Kali Linux", "Bash", "Python", "Regex", "Linux Auth Logs"],
-      githubLink: "https://github.com/Lokesh-2403/ssh-brute-force",
+        "Set up a vulnerable web application environment to practice common web attack techniques like SQL injection, XSS, and CSRF, using tools like Burp Suite and OWASP ZAP.",
+      tags: ["Burp Suite", "OWASP ZAP", "SQL map", "Nikto", "Metasploit Framework"],
+      githubLink: "https://github.com/Lokesh-2403/web-app-pentest-lab",
+    }, {
+      title: "SIEM Deployment & Real-Time Threat Hunting Dashboard Implementation",
+      status: "Planned",
+      description:
+        "Deployed a SIEM solution and implemented a real-time threat hunting dashboard to monitor and analyze security events across multiple systems.",
+      tags: ["Kali Linux", "Windows VM", "Splunk / ELK Stack", "Threat Hunting", "Winlogbeat", "Filebeat"],
+      githubLink: "https://github.com/Lokesh-2403/siem-deployment",
+    }, {
+      title: "Active Directory Attack Simulation & Defensive Monitoring Lab",
+      status: "Planned",
+      description:
+        "Simulated Active Directory attacks in a controlled lab environment and implemented defensive monitoring mechanisms to detect and respond to suspicious activities.",
+      tags: ["BloodHound", "Kali Linux", "Windows VM", "Mamikatz", "Impacket", "Responder", "Defensive Monitoring"],
+      githubLink: "https://github.com/Lokesh-2403/active-directory-lab",
+    }, {
+      title: "Cloud Infrastructure Security Assessment & Misconfiguration Detection",
+      status: "Planned",
+      description:
+        "Assessed cloud infrastructure for security misconfigurations and vulnerabilities in AWS and Azure environments.",
+      tags: ["ScoutSuite", "Prowler", "AWS CLI", "AWS Free Tier Account"],
+      githubLink: "https://github.com/Lokesh-2403/cloud-security-assessment",
+    }, {
+      title: "Static & Dynamic Malware Analysis and Reverse Engineering Lab",
+      status: "Planned",
+      description:
+        "Performed static and dynamic analysis of malware samples and reverse-engineered binaries to understand their behavior and functionality.",
+      tags: ["Kali Linux", "Wireshark", "Ghidra", "Radare2", "Volatility", "VirtualBox"],
+      githubLink: "https://github.com/Lokesh-2403/malware-analysis-lab",
     },
   ];
 

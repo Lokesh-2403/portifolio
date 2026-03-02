@@ -9,8 +9,7 @@ import Certifications from "./components/Certifications";
 import Contact from "./components/Contact";
 import Resume from "./components/Resume";
 import Footer from "./components/Footer";
-
-// ✅ Correct import (since file is directly inside pages)
+import CyberCursor from './components/CyberCursor';
 import HostBasedProject from "./pages/HostBasedProject";
 import WindowsEventLogProject from "./pages/WindowsEventLogProject";
 
@@ -22,6 +21,7 @@ function App() {
       className="relative min-h-screen bg-secondary-bg font-inter"
       style={{ animation: "portfolioFadeIn 0.8s ease forwards" }}
     >
+      <CyberCursor />
 
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>

@@ -39,7 +39,7 @@ const milestones = [
     tags: ["Malware", "MITM", "Phishing", "DDoS", "Injection"],
     status: "In Progress",
     type: "ongoing",
-    stopHere: true,
+    stopHere: true,  // line stops at midpoint between this and next
   },
   {
     side: "L",
@@ -58,34 +58,48 @@ export default function Journey() {
   const fillRef  = useRef<HTMLDivElement>(null);
   const dotRef   = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const currentPct = useRef(0);
+  const rafId = useRef<number>();
 
   useEffect(() => {
     const stopIndex = milestones.findIndex((m) => m.stopHere);
 
-    function tick() {
+    // Compute the max fill percentage: midpoint between stopIndex node and next node
+    function getMaxPct(): number {
       const line = lineRef.current;
-      const fill = fillRef.current;
-      const dot  = dotRef.current;
-      if (!line || !fill || !dot) return;
-
-      const lr      = line.getBoundingClientRect();
-      const trigger = window.innerHeight * 0.36;
+      if (!line) return 1;
+      const lr = line.getBoundingClientRect();
 
       const stopEl   = itemRefs.current[stopIndex];
+      const nextEl   = itemRefs.current[stopIndex + 1];
       const stopNode = stopEl?.querySelector<HTMLDivElement>(".jrn-node");
-      let maxPct = 1;
+      const nextNode = nextEl?.querySelector<HTMLDivElement>(".jrn-node");
 
-      if (stopNode) {
-        const nodeCenter = stopNode.getBoundingClientRect().top + stopNode.getBoundingClientRect().height / 2;
-        maxPct = (nodeCenter - lr.top) / lr.height;
-        maxPct = Math.max(0, Math.min(1, maxPct));
-      }
+      if (!stopNode || !nextNode) return 1;
 
-      let pct = (trigger - lr.top) / lr.height;
-      pct = Math.max(0, Math.min(pct, maxPct));
+      const stopCenter = stopNode.getBoundingClientRect().top + stopNode.getBoundingClientRect().height / 2;
+      const nextCenter = nextNode.getBoundingClientRect().top + nextNode.getBoundingClientRect().height / 2;
+      const midpoint   = (stopCenter + nextCenter) / 2;
 
-      fill.style.height = `${pct * 100}%`;
-      dot.style.top     = `${pct * 100}%`;
+      return Math.max(0, Math.min(1, (midpoint - lr.top) / lr.height));
+    }
+
+    // Target percentage based on scroll position
+    function getTargetPct(): number {
+      const line = lineRef.current;
+      if (!line) return 0;
+      const lr      = line.getBoundingClientRect();
+      const trigger = window.innerHeight * 0.36;
+      const raw     = (trigger - lr.top) / lr.height;
+      const maxPct  = getMaxPct();
+      return Math.max(0, Math.min(raw, maxPct));
+    }
+
+    function updateItems(pct: number) {
+      const line = lineRef.current;
+      if (!line) return;
+      const lr      = line.getBoundingClientRect();
+      const trigger = window.innerHeight * 0.36;
 
       itemRefs.current.forEach((m, idx) => {
         if (!m) return;
@@ -93,12 +107,8 @@ export default function Journey() {
         if (!node) return;
         const ny = node.getBoundingClientRect().top + 5;
 
-        // Slide in when entering viewport
-        if (ny < window.innerHeight * 0.88) {
-          m.classList.add("jrn-visible");
-        }
+        if (ny < window.innerHeight * 0.88) m.classList.add("jrn-visible");
 
-        // Light up when dot passes
         if (ny < trigger + 6 && idx <= stopIndex) {
           m.classList.add("jrn-lit");
         } else {
@@ -107,15 +117,31 @@ export default function Journey() {
       });
     }
 
-    window.addEventListener("scroll", tick, { passive: true });
-    tick();
-    return () => window.removeEventListener("scroll", tick);
+    // Smooth lerp loop — runs every frame
+    function loop() {
+      const target = getTargetPct();
+      // Lerp factor: 0.12 = smooth, increase for faster response
+      currentPct.current += (target - currentPct.current) * 0.12;
+
+      const pct = currentPct.current;
+
+      if (fillRef.current) fillRef.current.style.height = `${pct * 100}%`;
+      if (dotRef.current)  dotRef.current.style.top     = `${pct * 100}%`;
+
+      updateItems(pct);
+      rafId.current = requestAnimationFrame(loop);
+    }
+
+    rafId.current = requestAnimationFrame(loop);
+
+    return () => {
+      if (rafId.current) cancelAnimationFrame(rafId.current);
+    };
   }, []);
 
   return (
     <>
       <style>{`
-        /* ── Background ── */
         .jrn-section {
           position: relative;
           padding: 110px 0 160px;
@@ -131,15 +157,6 @@ export default function Journey() {
           pointer-events: none;
         }
 
-        /* ── Slide-in animations ── */
-        @keyframes jrn-slide-left {
-          from { opacity: 0; transform: translateX(-60px); }
-          to   { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes jrn-slide-right {
-          from { opacity: 0; transform: translateX(60px); }
-          to   { opacity: 1; transform: translateX(0); }
-        }
         @keyframes jrn-ripple {
           0%   { transform: scale(1); opacity: 0.5; }
           100% { transform: scale(2.4); opacity: 0; }
@@ -149,10 +166,8 @@ export default function Journey() {
           50%       { opacity: 0.15; }
         }
 
-        /* Default: hidden, shifted out */
-        .jrn-milestone {
-          opacity: 0;
-        }
+        .jrn-milestone { opacity: 0; }
+
         .jrn-milestone.slide-L .jrn-content-L {
           opacity: 0;
           transform: translateX(-60px);
@@ -164,20 +179,14 @@ export default function Journey() {
           transition: opacity 0.7s ease, transform 0.7s ease;
         }
 
-        /* Triggered: slide into place */
-        .jrn-milestone.jrn-visible {
-          opacity: 1;
-        }
+        .jrn-milestone.jrn-visible { opacity: 1; }
         .jrn-milestone.jrn-visible.slide-L .jrn-content-L {
-          opacity: 1;
-          transform: translateX(0);
+          opacity: 1; transform: translateX(0);
         }
         .jrn-milestone.jrn-visible.slide-R .jrn-content-R {
-          opacity: 1;
-          transform: translateX(0);
+          opacity: 1; transform: translateX(0);
         }
 
-        /* Stagger delays for each milestone */
         .jrn-milestone:nth-child(1) .jrn-content-L,
         .jrn-milestone:nth-child(1) .jrn-content-R { transition-delay: 0.05s; }
         .jrn-milestone:nth-child(2) .jrn-content-L,
@@ -189,17 +198,13 @@ export default function Journey() {
         .jrn-milestone:nth-child(5) .jrn-content-L,
         .jrn-milestone:nth-child(5) .jrn-content-R { transition-delay: 0.08s; }
 
-        /* ── Node dot ── */
-        .jrn-node {
-          transition: background 0.4s, box-shadow 0.4s, border-color 0.4s;
-        }
+        .jrn-node { transition: background 0.4s, box-shadow 0.4s, border-color 0.4s; }
         .jrn-milestone.jrn-lit .jrn-node {
           background: #00e5ff !important;
           border-color: #00e5ff !important;
           box-shadow: 0 0 10px #00e5ff, 0 0 22px rgba(0,229,255,0.45);
         }
 
-        /* ── Text light-up ── */
         .jrn-phase { transition: opacity 0.4s; }
         .jrn-milestone.jrn-lit .jrn-phase { opacity: 0.9 !important; }
 
@@ -212,18 +217,16 @@ export default function Journey() {
         .jrn-tag { transition: opacity 0.4s; }
         .jrn-milestone.jrn-lit .jrn-tag { opacity: 0.85 !important; }
 
-        /* ── Status colors ── */
-        .jrn-milestone.jrn-lit.done .jrn-status { color: #00ff99 !important; }
-        .jrn-milestone.jrn-lit.done .jrn-sdot   { background: #00ff99 !important; box-shadow: 0 0 7px #00ff99; }
+        .jrn-milestone.jrn-lit.done .jrn-status    { color: #00ff99 !important; }
+        .jrn-milestone.jrn-lit.done .jrn-sdot       { background: #00ff99 !important; box-shadow: 0 0 7px #00ff99; }
 
-        .jrn-milestone.jrn-lit.ongoing .jrn-status { color: #00e5ff !important; }
-        .jrn-milestone.jrn-lit.ongoing .jrn-sdot   {
+        .jrn-milestone.jrn-lit.ongoing .jrn-status  { color: #00e5ff !important; }
+        .jrn-milestone.jrn-lit.ongoing .jrn-sdot    {
           background: #00e5ff !important;
           box-shadow: 0 0 7px #00e5ff;
           animation: jrn-blink 1.4s ease-in-out infinite;
         }
 
-        /* ── Future (locked) ── */
         .jrn-milestone.future .jrn-title  { color: #2a3a5a !important; }
         .jrn-milestone.future .jrn-desc   { color: #1e2a45 !important; }
         .jrn-milestone.future .jrn-phase  { opacity: 0.15 !important; }
@@ -232,7 +235,6 @@ export default function Journey() {
         .jrn-milestone.future .jrn-sdot   { background: #1e2a45 !important; }
         .jrn-milestone.future .jrn-node   { background: #1e2a45 !important; border-color: #1e2a45 !important; }
 
-        /* ── Dot ring ── */
         .jrn-dot-ring {
           position: absolute;
           inset: -5px;
@@ -241,7 +243,6 @@ export default function Journey() {
           animation: jrn-ripple 2s ease-out infinite;
         }
 
-        /* ── Mobile ── */
         @media (max-width: 580px) {
           .jrn-grid { grid-template-columns: 1fr !important; padding-left: 30px; }
           .jrn-content-L,
@@ -253,9 +254,7 @@ export default function Journey() {
             transform: translateX(-40px) !important;
           }
           .jrn-milestone.jrn-visible .jrn-content-L,
-          .jrn-milestone.jrn-visible .jrn-content-R {
-            transform: translateX(0) !important;
-          }
+          .jrn-milestone.jrn-visible .jrn-content-R { transform: translateX(0) !important; }
           .jrn-empty { display: none !important; }
           .jrn-tags-L, .jrn-tags-R { justify-content: flex-start !important; }
           .jrn-line-wrap { left: 0 !important; transform: none !important; }
@@ -264,7 +263,6 @@ export default function Journey() {
 
       <section className="jrn-section">
 
-        {/* Header */}
         <div style={{ textAlign: "center", marginBottom: "100px", position: "relative", zIndex: 1 }}>
           <h2 style={{
             fontFamily: "'Inter', 'Segoe UI', sans-serif",
@@ -290,10 +288,8 @@ export default function Journey() {
           </p>
         </div>
 
-        {/* Timeline */}
         <div style={{ position: "relative", maxWidth: "860px", margin: "0 auto", padding: "0 20px", zIndex: 1 }}>
 
-          {/* Center line */}
           <div
             className="jrn-line-wrap"
             ref={lineRef}
@@ -306,7 +302,6 @@ export default function Journey() {
               background: "rgba(0,229,255,0.15)",
             }}
           >
-            {/* Glow fill */}
             <div ref={fillRef} style={{
               position: "absolute",
               top: 0, left: 0,
@@ -314,9 +309,9 @@ export default function Journey() {
               background: "linear-gradient(to bottom, #00e5ff, rgba(0,229,255,0.3))",
               boxShadow: "0 0 10px #00e5ff, 0 0 28px rgba(0,229,255,0.4)",
               borderRadius: "2px",
+              willChange: "height",
             }} />
 
-            {/* Glowing dot */}
             <div ref={dotRef} style={{
               position: "absolute",
               left: "50%", top: "0%",
@@ -326,12 +321,12 @@ export default function Journey() {
               background: "#00e5ff",
               boxShadow: "0 0 0 5px rgba(0,229,255,0.18), 0 0 0 10px rgba(0,229,255,0.08), 0 0 18px #00e5ff, 0 0 40px rgba(0,229,255,0.45)",
               zIndex: 20,
+              willChange: "top",
             }}>
               <div className="jrn-dot-ring" />
             </div>
           </div>
 
-          {/* Milestones */}
           {milestones.map((m, i) => (
             <div
               key={i}
@@ -344,7 +339,6 @@ export default function Journey() {
                 position: "relative",
               }}
             >
-              {/* Node on line */}
               <div className="jrn-node" style={{
                 position: "absolute",
                 left: "50%", top: "8px",
@@ -374,7 +368,6 @@ export default function Journey() {
             </div>
           ))}
 
-          {/* Footer */}
           <div style={{
             textAlign: "center", marginTop: "20px",
             fontFamily: "'Inter', monospace",

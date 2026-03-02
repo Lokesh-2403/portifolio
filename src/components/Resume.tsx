@@ -10,7 +10,7 @@ export default function Resume() {
               <FileText className="w-12 h-12 text-accent-cyan" />
             </div>
             <h2 className="text-4xl lg:text-5xl font-bold text-text-primary font-poppins mb-4 tracking-tight">
-              Download Resume
+              Resume
             </h2>
             <p className="text-text-secondary text-lg leading-relaxed">
               View a detailed overview of my education, skills, and practical experience.
@@ -22,7 +22,7 @@ export default function Resume() {
             className="inline-flex items-center gap-3 px-8 py-4 bg-accent-cyan text-primary-bg font-semibold rounded-lg transition-all duration-300 hover:shadow-xl hover:shadow-accent-cyan/50 hover:-translate-y-1 group"
           >
             <Download className="w-5 h-5 group-hover:animate-bounce" />
-            <span>Download Resume PDF</span>
+            <span>View Resume</span>
           </a>
 
           <p className="mt-8 text-text-secondary text-sm">
