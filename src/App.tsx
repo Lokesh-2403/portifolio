@@ -3,7 +3,6 @@ import { useState } from "react";
 import Hero from "./components/Hero";
 import About from "./components/About";
 import Skills from "./components/Skills";
-import Journey from "./components/Journey";
 import Projects from "./components/Projects";
 import Certifications from "./components/Certifications";
 import Contact from "./components/Contact";
@@ -33,7 +32,6 @@ function App() {
             <Hero />
             <About />
             <Skills />
-            <Journey />
             <Projects
               onViewHostProject={() => setActivePage("host")}
               onViewWindowsProject={() => setActivePage("windows")}

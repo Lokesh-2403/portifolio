@@ -1,63 +1,68 @@
 import { useEffect, useRef, useState } from "react";
 
 export default function CyberCursor() {
-  const cursorRef = useRef<HTMLDivElement>(null);
-  const [clicking, setClicking] = useState(false);
+  const dotRef  = useRef<HTMLDivElement>(null);
+  const ringRef = useRef<HTMLDivElement>(null);
+  const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
+  const rippleId  = useRef(0);
+  const mouse     = useRef({ x: -200, y: -200 });
+  const ringPos   = useRef({ x: -200, y: -200 });
+  const rafId     = useRef<number>();
   const [hovering, setHovering] = useState(false);
-  const trailEls = useRef<HTMLDivElement[]>([]);
-  const mousePos = useRef({ x: 0, y: 0 });
-  const animFrame = useRef<number>();
+  const hoveringRef = useRef(false);
 
   useEffect(() => {
-    const TRAIL_COUNT = 6;
-    const positions: { x: number; y: number }[] = Array(TRAIL_COUNT).fill({ x: 0, y: 0 });
-
     const onMove = (e: MouseEvent) => {
-      mousePos.current = { x: e.clientX, y: e.clientY };
-      if (cursorRef.current) {
-        cursorRef.current.style.left = e.clientX + "px";
-        cursorRef.current.style.top = e.clientY + "px";
+      mouse.current = { x: e.clientX, y: e.clientY };
+      if (dotRef.current) {
+        dotRef.current.style.left = e.clientX + "px";
+        dotRef.current.style.top  = e.clientY + "px";
       }
     };
 
-    const animateTrail = () => {
-      positions.unshift({ ...mousePos.current });
-      positions.pop();
-      trailEls.current.forEach((el, i) => {
-        if (el && positions[i]) {
-          el.style.left = positions[i].x + "px";
-          el.style.top = positions[i].y + "px";
-        }
-      });
-      animFrame.current = requestAnimationFrame(animateTrail);
+    const onDown = (e: MouseEvent) => {
+      const id = rippleId.current++;
+      setRipples(prev => [...prev, { id, x: e.clientX, y: e.clientY }]);
+      setTimeout(() => setRipples(prev => prev.filter(r => r.id !== id)), 800);
     };
-
-    const onDown = () => setClicking(true);
-    const onUp = () => setClicking(false);
 
     const onEnter = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.closest("a, button, input, textarea, select, [role='button']")) setHovering(true);
+      if ((e.target as HTMLElement).closest("a,button,input,textarea,select,[role='button']")) {
+        hoveringRef.current = true;
+        setHovering(true);
+      }
     };
     const onLeave = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.closest("a, button, input, textarea, select, [role='button']")) setHovering(false);
+      if ((e.target as HTMLElement).closest("a,button,input,textarea,select,[role='button']")) {
+        hoveringRef.current = false;
+        setHovering(false);
+      }
     };
 
-    document.addEventListener("mousemove", onMove);
-    document.addEventListener("mousedown", onDown);
-    document.addEventListener("mouseup", onUp);
-    document.addEventListener("mouseover", onEnter);
-    document.addEventListener("mouseout", onLeave);
-    animFrame.current = requestAnimationFrame(animateTrail);
+    // Smooth lagging ring
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+    const animate = () => {
+      ringPos.current.x = lerp(ringPos.current.x, mouse.current.x, 0.1);
+      ringPos.current.y = lerp(ringPos.current.y, mouse.current.y, 0.1);
+      if (ringRef.current) {
+        ringRef.current.style.left = ringPos.current.x + "px";
+        ringRef.current.style.top  = ringPos.current.y + "px";
+      }
+      rafId.current = requestAnimationFrame(animate);
+    };
+    rafId.current = requestAnimationFrame(animate);
+
+    document.addEventListener("mousemove",  onMove);
+    document.addEventListener("mousedown",  onDown);
+    document.addEventListener("mouseover",  onEnter);
+    document.addEventListener("mouseout",   onLeave);
 
     return () => {
-      document.removeEventListener("mousemove", onMove);
-      document.removeEventListener("mousedown", onDown);
-      document.removeEventListener("mouseup", onUp);
-      document.removeEventListener("mouseover", onEnter);
-      document.removeEventListener("mouseout", onLeave);
-      if (animFrame.current) cancelAnimationFrame(animFrame.current);
+      document.removeEventListener("mousemove",  onMove);
+      document.removeEventListener("mousedown",  onDown);
+      document.removeEventListener("mouseover",  onEnter);
+      document.removeEventListener("mouseout",   onLeave);
+      if (rafId.current) cancelAnimationFrame(rafId.current);
     };
   }, []);
 
@@ -66,116 +71,87 @@ export default function CyberCursor() {
       <style>{`
         * { cursor: none !important; }
 
-        .cyber-cursor {
+        /* ── Sharp inner dot ── */
+        .cc-dot {
           position: fixed;
-          top: 0; left: 0;
+          width: 5px; height: 5px;
+          background: #00e5ff;
+          border-radius: 50%;
+          transform: translate(-50%, -50%);
           pointer-events: none;
           z-index: 99999;
-          transform: translate(-50%, -50%);
+          transition: transform 0.1s ease, background 0.1s ease;
+          box-shadow: 0 0 5px rgba(0,229,255,0.5);
+        }
+        .cc-dot.hovering {
+          transform: translate(-50%, -50%) scale(0);
         }
 
-        .cyber-inner-dot {
-          width: 10px;
-          height: 10px;
-          background: #00ffff;
-          border-radius: 50%;
-          position: absolute;
-          top: 50%; left: 50%;
-          transform: translate(-50%, -50%);
-          box-shadow: 0 0 8px #00ffff, 0 0 16px #00ffff88;
-          transition: transform 0.15s ease, box-shadow 0.15s ease;
-          z-index: 2;
-        }
-
-        .cyber-cursor.clicking .cyber-inner-dot {
-          transform: translate(-50%, -50%) scale(1.5);
-          box-shadow: 0 0 16px #00ffff, 0 0 32px #00ffff;
-        }
-
-        .cyber-outer-ring {
-          width: 44px;
-          height: 44px;
-          position: absolute;
-          top: 50%; left: 50%;
-          transform: translate(-50%, -50%);
-          animation: ringRotate 2s linear infinite;
-        }
-
-        .cyber-cursor.hovering .cyber-outer-ring {
-          animation: ringRotate 0.6s linear infinite;
-        }
-
-        .cyber-outer-ring svg {
-          width: 100%;
-          height: 100%;
-          filter: drop-shadow(0 0 4px #00ffff) drop-shadow(0 0 8px #00ffff88);
-          transition: filter 0.2s;
-        }
-
-        .cyber-cursor.hovering .cyber-outer-ring svg {
-          filter: drop-shadow(0 0 8px #00ffff) drop-shadow(0 0 16px #00ffff);
-        }
-
-        .cyber-trail {
+        /* ── Smooth lagging ring ── */
+        .cc-ring {
           position: fixed;
+          width: 32px; height: 32px;
+          border-radius: 50%;
+          border: 1.5px solid rgba(0,229,255,0.55);
+          transform: translate(-50%, -50%);
           pointer-events: none;
           z-index: 99998;
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: #00ffff;
-          transform: translate(-50%, -50%);
+          transition: width 0.3s ease, height 0.3s ease,
+                      border-color 0.3s ease, background-color 0.3s ease,
+                      box-shadow 0.3s ease;
+        }
+        .cc-ring.hovering {
+          width: 44px; height: 44px;
+          border-color: rgba(0,229,255,0.9);
+          background-color: rgba(0,229,255,0.06);
+          box-shadow: 0 0 12px rgba(0,229,255,0.15);
         }
 
-        @keyframes ringRotate {
-          from { transform: translate(-50%, -50%) rotate(0deg); }
-          to   { transform: translate(-50%, -50%) rotate(360deg); }
+        /* ── Shockwave ripple on click ── */
+        .cc-ripple {
+          position: fixed;
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 99997;
+          transform: translate(-50%, -50%);
+          animation: shockwave 0.75s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+        }
+        .cc-ripple-1 {
+          width: 8px; height: 8px;
+          border: 1.5px solid rgba(0,229,255,0.8);
+          animation-delay: 0s;
+        }
+        .cc-ripple-2 {
+          width: 8px; height: 8px;
+          border: 1px solid rgba(0,229,255,0.4);
+          animation-delay: 0.1s;
+        }
+        .cc-ripple-3 {
+          width: 8px; height: 8px;
+          border: 1px solid rgba(0,229,255,0.2);
+          animation-delay: 0.2s;
+        }
+
+        @keyframes shockwave {
+          0%   { transform: translate(-50%,-50%) scale(1);   opacity: 1; }
+          100% { transform: translate(-50%,-50%) scale(7);   opacity: 0; }
         }
       `}</style>
 
-      {/* Trail dots */}
-      {Array.from({ length: 6 }).map((_, i) => (
-        <div
-          key={i}
-          className="cyber-trail"
-          style={{ opacity: ((6 - i) / 6) * 0.3 }}
-          ref={(el) => { if (el) trailEls.current[i] = el; }}
-        />
+      {/* Shockwave rings on click */}
+      {ripples.map(r => (
+        <div key={r.id} style={{ position: "fixed", left: r.x, top: r.y, pointerEvents: "none", zIndex: 99997 }}>
+          <div className="cc-ripple cc-ripple-1" style={{ left: 0, top: 0 }} />
+          <div className="cc-ripple cc-ripple-2" style={{ left: 0, top: 0 }} />
+          <div className="cc-ripple cc-ripple-3" style={{ left: 0, top: 0 }} />
+        </div>
       ))}
 
-      {/* Main cursor */}
-      <div
-        ref={cursorRef}
-        className={`cyber-cursor ${clicking ? "clicking" : ""} ${hovering ? "hovering" : ""}`}
-        style={{ width: 44, height: 44 }}
-      >
-        {/* Filled cyan inner circle */}
-        <div className="cyber-inner-dot" />
+      {/* Lagging ring */}
+      <div ref={ringRef} className={`cc-ring ${hovering ? "hovering" : ""}`} />
 
-        {/* Rotating outer ring with 4 tick marks centered on the circle edge */}
-        <div className="cyber-outer-ring">
-          <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-  {/* Outer circle — radius 11 (was 18, reduced by ~40%) */}
-  <circle cx="22" cy="22" r="11" stroke="#00ffff" strokeWidth="1.5" />
-
-  {/*
-    Tick midpoints ON the circle (r=11):
-    Top:    y = 22-11 = 11 → line y=8  to y=14
-    Bottom: y = 22+11 = 33 → line y=30 to y=36
-    Left:   x = 22-11 = 11 → line x=8  to x=14
-    Right:  x = 22+11 = 33 → line x=30 to x=36
-  */}
-  {/* Top */}
-  <line x1="22" y1="8"  x2="22" y2="14" stroke="#00ffff" strokeWidth="2" strokeLinecap="round"/>
-  {/* Bottom */}
-  <line x1="22" y1="30" x2="22" y2="36" stroke="#00ffff" strokeWidth="2" strokeLinecap="round"/>
-  {/* Left */}
-  <line x1="8"  y1="22" x2="14" y2="22" stroke="#00ffff" strokeWidth="2" strokeLinecap="round"/>
-  {/* Right */}
-  <line x1="30" y1="22" x2="36" y2="22" stroke="#00ffff" strokeWidth="2" strokeLinecap="round"/>
-</svg>
-        </div>
-      </div>
+      {/* Sharp dot */}
+      <div ref={dotRef}  className={`cc-dot  ${hovering ? "hovering" : ""}`} />
     </>
   );
 }
