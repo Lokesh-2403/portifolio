@@ -11,6 +11,7 @@ import Footer from "./components/Footer";
 import CyberCursor from './components/CyberCursor';
 import HostBasedProject from "./pages/HostBasedProject";
 import WindowsEventLogProject from "./pages/WindowsEventLogProject";
+import PortfolioAssistant from "./components/Assistant.tsx";
 
 function App() {
   const [activePage, setActivePage] = useState<"home" | "host" | "windows">("home");
@@ -68,6 +69,8 @@ function App() {
         )}
 
       </div>
+
+      <PortfolioAssistant /> {/* ← ADD THIS */}
     </div>
   );
 }
