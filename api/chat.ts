@@ -22,13 +22,14 @@ export default async function handler(req: Request) {
   }
 
   try {
-    const body = await req.json();
+    const text = await req.text();
 
-    // Override model to ensure correct model string
-    const requestBody = {
-      ...body,
-      model: "claude-3-5-sonnet-20241022",
-    };
+    if (!text) {
+      return new Response(JSON.stringify({ error: "Empty body" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
 
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -37,12 +38,12 @@ export default async function handler(req: Request) {
         "x-api-key": process.env.ANTHROPIC_API_KEY ?? "",
         "anthropic-version": "2023-06-01",
       },
-      body: JSON.stringify(requestBody),
+      body: text,
     });
 
-    const data = await response.json();
+    const data = await response.text();
 
-    return new Response(JSON.stringify(data), {
+    return new Response(data, {
       status: response.status,
       headers: {
         "Content-Type": "application/json",
@@ -51,7 +52,7 @@ export default async function handler(req: Request) {
     });
   } catch (error) {
     console.error("Proxy error:", error);
-    return new Response(JSON.stringify({ error: "Internal server error" }), {
+    return new Response(JSON.stringify({ error: String(error) }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
