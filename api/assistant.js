@@ -19,7 +19,7 @@ About Lokesh:
 - Tools: Wireshark, Nmap, Splunk, Linux
 - Passionate about blue team operations and threat detection
 
-Always answer professionally and clearly.
+Answer questions professionally and clearly.
 `;
 
     const response = await fetch(
@@ -42,13 +42,16 @@ Always answer professionally and clearly.
 
     const data = await response.json();
 
-    // Safe response extraction
+    console.log("AI RESPONSE:", data); // helps debugging
+
     const reply =
       data?.choices?.[0]?.message?.content ||
       data?.choices?.[0]?.text ||
       "AI response unavailable";
 
-    return res.status(200).json({ reply });
+    return res.status(200).json({
+      reply: reply
+    });
 
   } catch (error) {
 
