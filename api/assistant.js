@@ -1,25 +1,32 @@
+// API/Assistant.js
 export default async function handler(req, res) {
-
   if (req.method !== "POST") {
     return res.status(405).json({ reply: "Method not allowed" });
   }
 
   try {
-
     const { message } = req.body;
 
+    if (!message || typeof message !== "string") {
+      return res.status(400).json({ reply: "Invalid input." });
+    }
+
+    // System prompt makes AI fully GPT-like
     const systemPrompt = `
-You are an AI assistant for Lokesh's cybersecurity portfolio.
+You are an AI assistant for Lokesh Adusumalli's cybersecurity portfolio.
 
-About Lokesh:
-- Cybersecurity enthusiast
-- Skilled in networking and SOC analysis
-- Built Host Based Intrusion Detection project
-- Built Windows Event Log Analysis project
-- Tools: Wireshark, Nmap, Splunk, Linux
-- Passionate about blue team operations and threat detection
-
-Answer questions professionally and clearly.
+Your job:
+- Answer all questions professionally, clearly, and recruiter-ready.
+- Understand questions about Lokesh, his projects, skills, or background, 
+  even if the user uses uppercase, lowercase, mixed case, or minor typos.
+- If asked about Lokesh, always describe him as:
+  "Lokesh Adusumalli is a cybersecurity enthusiast and aspiring ethical hacker 
+  with a strong focus on network security, penetration testing, and vulnerability assessment. 
+  He builds hands-on projects that demonstrate both technical expertise and 
+  real-world problem-solving skills, showcasing his passion for blue team operations 
+  and threat detection."
+- If asked about projects, tools, or skills, explain accurately based on his portfolio.
+- Always infer intent; do not rely on exact keywords.
 `;
 
     const response = await fetch(
@@ -42,25 +49,15 @@ Answer questions professionally and clearly.
 
     const data = await response.json();
 
-    console.log("AI RESPONSE:", data); // helps debugging
-
     const reply =
-      data?.choices?.[0]?.message?.content ||
-      data?.choices?.[0]?.text ||
+      (data?.choices?.[0]?.message?.content) ||
+      (data?.choices?.[0]?.text) ||
       "AI response unavailable";
 
-    return res.status(200).json({
-      reply: reply
-    });
+    return res.status(200).json({ reply });
 
   } catch (error) {
-
     console.error("AI ERROR:", error);
-
-    return res.status(500).json({
-      reply: "AI error occurred."
-    });
-
+    return res.status(500).json({ reply: "AI error occurred." });
   }
-
 }
