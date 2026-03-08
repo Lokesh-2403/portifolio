@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Project {
@@ -17,6 +17,11 @@ interface ProjectsProps {
 export default function Projects({ onViewHostProject, onViewWindowsProject }: ProjectsProps) {
 
   const [activeIndex, setActiveIndex] = useState(0);
+
+  /* ⭐ FIX: Always scroll to top when page opens */
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const projects: Project[] = [
     {
@@ -99,6 +104,7 @@ export default function Projects({ onViewHostProject, onViewWindowsProject }: Pr
 <div style={{maxWidth:"1200px",margin:"0 auto",padding:"0 40px"}}>
 
 <div style={{textAlign:"center",marginBottom:"70px"}}>
+
 <h2 style={{fontSize:"48px",fontWeight:"700",color:"#fff"}}>
 Security Projects
 </h2>
@@ -106,6 +112,7 @@ Security Projects
 <p style={{color:"#6b7280",fontSize:"14px"}}>
 All projects are built in a controlled lab environment for defensive security learning.
 </p>
+
 </div>
 
 {/* Navigation */}
@@ -212,10 +219,8 @@ cursor:"pointer",
 fontSize:"14px",
 display:"flex",
 alignItems:"center",
-gap:"6px",
-position:"relative"
+gap:"6px"
 }}
-className="details-btn"
 >
 Details <ExternalLink size={14}/>
 </button>
@@ -225,7 +230,6 @@ Details <ExternalLink size={14}/>
 {project.githubLink && (
 
 <button
-className="details-btn"
 onClick={()=>window.open(project.githubLink,"_blank")}
 style={{
 background:"none",
@@ -234,8 +238,7 @@ color:"#9ca3af",
 cursor:"pointer",
 display:"flex",
 alignItems:"center",
-gap:"6px",
-position:"relative"
+gap:"6px"
 }}
 >
 <Github size={15}/> GitHub

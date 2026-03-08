@@ -7,8 +7,14 @@ import screenshot6 from "../assets/projects/host-based/screenshot6.png";
 import screenshot7 from "../assets/projects/host-based/screenshot7.png";
 
 const HostBasedProject: React.FC = () => {
+
   const [showModal, setShowModal] = useState(false);
   const [reportContent, setReportContent] = useState("");
+
+  /* Always open page from top */
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     fetch("/reports/reconnaissance_report.txt")
@@ -59,16 +65,54 @@ const HostBasedProject: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-zinc-900 to-black text-white px-6 md:px-20 py-16">
 
+      
+
+      {/* Project Title */}
       <h1 className="text-4xl font-bold text-cyan-400 mb-6">
         Host-Based Network Reconnaissance & Service Enumeration
       </h1>
 
-      <p className="text-gray-300 max-w-4xl mb-16 leading-relaxed">
+      <p className="text-gray-300 max-w-4xl mb-12 leading-relaxed">
         Practical reconnaissance performed in a controlled lab environment using Nmap.
       </p>
 
+      {/* ⭐ Project Info Banner */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
+
+        <div className="bg-zinc-900 border border-cyan-500/20 p-5 rounded-xl text-center">
+          <p className="text-sm text-gray-400">Project Type</p>
+          <p className="text-cyan-400 font-semibold mt-1">
+            Network Reconnaissance
+          </p>
+        </div>
+
+        <div className="bg-zinc-900 border border-cyan-500/20 p-5 rounded-xl text-center">
+          <p className="text-sm text-gray-400">Tools Used</p>
+          <p className="text-cyan-400 font-semibold mt-1">
+            Nmap, Kali Linux
+          </p>
+        </div>
+
+        <div className="bg-zinc-900 border border-cyan-500/20 p-5 rounded-xl text-center">
+          <p className="text-sm text-gray-400">Environment</p>
+          <p className="text-cyan-400 font-semibold mt-1">
+            Virtual Lab
+          </p>
+        </div>
+
+        <div className="bg-zinc-900 border border-cyan-500/20 p-5 rounded-xl text-center">
+          <p className="text-sm text-gray-400">Skill Level</p>
+          <p className="text-cyan-400 font-semibold mt-1">
+            Beginner Security Analyst
+          </p>
+        </div>
+
+      </div>
+
+      {/* Project Steps */}
       {sections.map((section, index) => (
         <div key={index} className="mb-24">
+
           <h2 className="text-2xl font-semibold text-cyan-300 mb-6">
             {section.title}
           </h2>
@@ -86,13 +130,14 @@ const HostBasedProject: React.FC = () => {
           <p className="text-gray-300 leading-relaxed">
             {section.explanation}
           </p>
+
         </div>
       ))}
 
-      {/* Bottom Center Section */}
+      {/* Bottom Section */}
       <div className="mt-20 flex flex-col items-center space-y-10">
 
-        {/* Smaller Centered Cyan Button */}
+        {/* Scan Output Button */}
         <div
           onClick={() => setShowModal(true)}
           className="bg-cyan-600 hover:bg-cyan-500 
@@ -101,14 +146,14 @@ const HostBasedProject: React.FC = () => {
                      rounded-xl 
                      cursor-pointer 
                      transition-all duration-300 
-                     shadow-lg"
+                     shadow-md hover:shadow-cyan-500/30"
         >
           <h2 className="text-base font-semibold">
             View Scanned Output
           </h2>
         </div>
 
-        {/* Final Conclusion Section */}
+        {/* Final Conclusion */}
         <div className="w-full md:w-2/3 bg-zinc-900 border border-cyan-500/20 
                         rounded-xl p-6 shadow-lg">
 
@@ -129,7 +174,7 @@ const HostBasedProject: React.FC = () => {
 
       </div>
 
-      {/* MODAL */}
+      {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
 
@@ -137,7 +182,7 @@ const HostBasedProject: React.FC = () => {
 
             <button
               onClick={() => setShowModal(false)}
-              className="absolute top-4 right-4 text-red-400 hover:text-red-300"
+              className="absolute top-4 right-4 text-red-400 hover:text-red-300 text-lg"
             >
               ✕
             </button>

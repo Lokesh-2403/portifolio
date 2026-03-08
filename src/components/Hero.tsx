@@ -1,4 +1,4 @@
-import { Shield } from "lucide-react";
+import { Shield, FolderOpen, FileText } from "lucide-react";
 import profile from "../assets/profile.jpg.png";
 
 export default function Hero() {
@@ -6,12 +6,12 @@ export default function Hero() {
     <section
       id="home"
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
-      style={{ backgroundColor: '#000000' }}
+      style={{ backgroundColor: "#000000" }}
     >
-      {/* Subtle Overlay for Better Readability */}
+      {/* Subtle Overlay */}
       <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
 
-      {/* Cyber Shield Animated Background Element */}
+      {/* Cyber Shield Animated Background */}
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
         <div className="relative w-full max-w-2xl aspect-square">
           <div className="absolute inset-0 flex items-center justify-center">
@@ -95,7 +95,7 @@ export default function Hero() {
       <div className="container mx-auto px-6 lg:px-12 py-20 relative z-10">
         <div className="flex justify-center">
           <div className="flex flex-col md:flex-row items-center gap-10 max-w-4xl animate-fade-in">
-
+            
             {/* Profile Image */}
             <div className="flex-shrink-0">
               <img
@@ -119,8 +119,32 @@ export default function Hero() {
                 <p className="text-lg lg:text-xl text-gray-300 font-medium tracking-wide">
                   Learning | Practicing | Building Security Skills
                 </p>
+
+                {/* ⭐ NEW BUTTONS */}
+                <div className="flex flex-wrap justify-center md:justify-start gap-6 pt-6">
+
+                  {/* View Projects */}
+                  <a
+  href="#projects"
+  className="flex items-center gap-2 px-6 py-3 bg-accent-cyan text-black font-semibold rounded-lg hover:scale-105 transition duration-300 shadow-md shadow-accent-cyan/10"
+>
+  <FolderOpen size={18} />
+  View Projects
+</a>
+
+                  {/* Resume */}
+                  <a
+                    href="#resume"
+                    className="flex items-center gap-2 px-6 py-3 border border-accent-cyan text-accent-cyan font-semibold rounded-lg hover:bg-accent-cyan hover:text-black transition duration-300"
+                  >
+                    <FileText size={18} />
+                    Resume
+                  </a>
+
+                </div>
               </div>
             </div>
+
           </div>
         </div>
       </div>

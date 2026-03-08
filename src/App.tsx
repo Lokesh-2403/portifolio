@@ -7,7 +7,7 @@ import Skills from "./components/Skills";
 import Projects from "./components/Projects";
 import Certifications from "./components/Certifications";
 import Contact from "./components/Contact";
-import Resume from "./components/Resume";
+
 import Footer from "./components/Footer";
 import CyberCursor from './components/CyberCursor';
 import HostBasedProject from "./pages/HostBasedProject";
@@ -40,7 +40,7 @@ function App() {
             />
             <Certifications />
             <Contact />
-            <Resume />
+          
             <Footer />
           </>
         )}
