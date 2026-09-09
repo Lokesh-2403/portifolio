@@ -50,6 +50,7 @@ export default function Hero() {
               strokeWidth="0.5"
               opacity="0.2"
             />
+
             <circle
               cx="100"
               cy="100"
@@ -59,6 +60,7 @@ export default function Hero() {
               strokeWidth="0.5"
               opacity="0.3"
             />
+
             <circle
               cx="100"
               cy="100"
@@ -78,6 +80,7 @@ export default function Hero() {
               strokeWidth="0.5"
               opacity="0.15"
             />
+
             <line
               x1="20"
               y1="100"
@@ -95,12 +98,17 @@ export default function Hero() {
       <div className="container mx-auto px-6 lg:px-12 py-20 relative z-10">
         <div className="flex justify-center">
           <div className="flex flex-col md:flex-row items-center gap-10 max-w-4xl animate-fade-in">
-            
+
             {/* Profile Image */}
             <div className="flex-shrink-0">
               <img
                 src={profile}
-                alt="Lokesh Babu"
+                alt="Lokesh Babu Adusumalli — Cybersecurity Student and Aspiring SOC Analyst"
+                title="Lokesh Babu Adusumalli"
+                width="208"
+                height="208"
+                loading="eager"
+                decoding="async"
                 className="w-40 h-40 md:w-52 md:h-52 rounded-full object-cover border-4 border-accent-cyan shadow-lg shadow-accent-cyan/20"
               />
             </div>
@@ -108,29 +116,32 @@ export default function Hero() {
             {/* Text Content */}
             <div className="space-y-6 text-center md:text-left">
               <div className="space-y-3">
+
+                {/* Main Name */}
                 <h1 className="text-5xl lg:text-7xl font-bold text-white font-poppins tracking-tight">
                   Lokesh Babu
                 </h1>
 
-                <h2 className="text-2xl lg:text-3xl font-semibold text-accent-cyan">
-                  Beginner Cybersecurity Analyst
+                {/* Professional Identity */}
+                <h2 className="text-lg lg:text-xl font-semibold text-accent-cyan">
+                  Cybersecurity Student · Aspiring SOC Analyst
                 </h2>
 
                 <p className="text-lg lg:text-xl text-gray-300 font-medium tracking-wide">
                   Learning | Practicing | Building Security Skills
                 </p>
 
-                {/* ⭐ NEW BUTTONS */}
+                {/* Buttons */}
                 <div className="flex flex-wrap justify-center md:justify-start gap-6 pt-6">
 
                   {/* View Projects */}
                   <a
-  href="#projects"
-  className="flex items-center gap-2 px-6 py-3 bg-accent-cyan text-black font-semibold rounded-lg hover:scale-105 transition duration-300 shadow-md shadow-accent-cyan/10"
->
-  <FolderOpen size={18} />
-  View Projects
-</a>
+                    href="#projects"
+                    className="flex items-center gap-2 px-6 py-3 bg-accent-cyan text-black font-semibold rounded-lg hover:scale-105 transition duration-300 shadow-md shadow-accent-cyan/10"
+                  >
+                    <FolderOpen size={18} />
+                    View Projects
+                  </a>
 
                   {/* Resume */}
                   <a
@@ -198,7 +209,11 @@ export default function Hero() {
         .shield-glow {
           position: absolute;
           inset: -30%;
-          background: radial-gradient(circle, rgba(0, 217, 255, 0.15) 0%, transparent 70%);
+          background: radial-gradient(
+            circle,
+            rgba(0, 217, 255, 0.15) 0%,
+            transparent 70%
+          );
           animation: pulse-glow 4s ease-in-out infinite;
         }
       `}</style>
