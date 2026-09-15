@@ -14,11 +14,13 @@ interface ProjectsProps {
   onViewWindowsProject: () => void;
 }
 
-export default function Projects({ onViewHostProject, onViewWindowsProject }: ProjectsProps) {
-
+export default function Projects({
+  onViewHostProject,
+  onViewWindowsProject,
+}: ProjectsProps) {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  /* ⭐ FIX: Always scroll to top when page opens */
+  /* Always scroll to top when page opens */
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -27,265 +29,401 @@ export default function Projects({ onViewHostProject, onViewWindowsProject }: Pr
     {
       title: "Host-Based Network Reconnaissance & Service Enumeration",
       status: "Completed",
-      description: "Discover hosts, enumerate ports, and fingerprint OS using Nmap in a controlled lab.",
-      tags: ["Kali Linux","Nmap","TCP SYN Scan","Service Enumeration","OS Detection"],
-      githubLink: "https://github.com/Lokesh-2403/host-based-reconnaissance"
+      description:
+        "Performed controlled network reconnaissance using Nmap to identify live hosts, enumerate open ports, detect services, and perform basic OS fingerprinting in a lab environment.",
+      tags: [
+        "Kali Linux",
+        "Nmap",
+        "TCP SYN Scan",
+        "Service Enumeration",
+        "OS Detection",
+      ],
+      githubLink:
+        "https://github.com/Lokesh-2403/host-based-reconnaissance",
     },
+
     {
       title: "Windows Security Event Log Analysis & Threat Detection",
       status: "Completed",
-      description: "Investigated Windows security events and detected suspicious login activity.",
-      tags: ["Windows Event Viewer","Log Analysis","Threat Detection","SOC Operations"],
-      githubLink: "https://github.com/Lokesh-2403/windows-login"
+      description:
+        "Analyzed Windows Security Event Logs to investigate authentication activity and identify suspicious login patterns using a practical log investigation workflow.",
+      tags: [
+        "Windows Event Viewer",
+        "Log Analysis",
+        "Threat Detection",
+        "Security Monitoring",
+      ],
+      githubLink: "https://github.com/Lokesh-2403/windows-login",
     },
+
     {
       title: "Linux SSH Brute Force Detection System",
       status: "Completed",
-      description: "Detect SSH brute-force attempts using log analysis and scripts.",
-      tags: ["Kali Linux","Bash","Python","Regex"],
-      githubLink: "https://github.com/Lokesh-2403/ssh-brute-force"
+      description:
+        "Analyzed Linux authentication logs and used Bash, Python, and regular expressions to identify repeated failed SSH login attempts associated with brute-force activity.",
+      tags: [
+        "Kali Linux",
+        "Bash",
+        "Python",
+        "Regex",
+        "Log Analysis",
+      ],
+      githubLink: "https://github.com/Lokesh-2403/ssh-brute-force",
     },
+
     {
       title: "Endpoint Security Monitoring",
       status: "Underway",
-      description: "Detect suspicious processes and privilege escalation.",
-      tags: ["Wazuh","Auditd","Syslog"]
+      description:
+        "Building a controlled Linux endpoint monitoring lab to observe system activity, authentication events, processes, and security-related logs.",
+      tags: ["Wazuh", "Auditd", "Syslog", "Endpoint Monitoring"],
     },
+
     {
-      title: "Web Application Penetration Testing Lab",
+      title: "Web Application Security Testing Lab",
       status: "Planned",
-      description: "Practice SQLi, XSS and CSRF attacks in a lab environment.",
-      tags: ["Burp Suite","OWASP ZAP","SQLmap"]
+      description:
+        "Planned hands-on lab for learning common web application vulnerabilities and understanding how security testing tools are used to identify them.",
+      tags: ["Burp Suite", "OWASP ZAP", "SQL Injection", "XSS"],
     },
+
     {
-      title: "SIEM Deployment & Threat Hunting Dashboard",
+      title: "SIEM & Threat Hunting Lab",
       status: "Planned",
-      description: "Deploy SIEM and monitor real-time threats.",
-      tags: ["Splunk","ELK","Threat Hunting"]
+      description:
+        "Planned security monitoring lab focused on collecting logs, creating basic detections, investigating security events, and learning threat-hunting workflows.",
+      tags: ["Splunk", "ELK", "Log Analysis", "Threat Hunting"],
     },
+
     {
-      title: "Active Directory Attack Simulation Lab",
+      title: "Active Directory Security Lab",
       status: "Planned",
-      description: "Simulate AD attacks and detection techniques.",
-      tags: ["BloodHound","Impacket"]
+      description:
+        "Planned Windows Active Directory lab for learning common attack techniques, authentication weaknesses, privilege escalation concepts, and defensive detection.",
+      tags: ["Active Directory", "BloodHound", "Windows Security"],
     },
+
     {
-      title: "Cloud Infrastructure Security Assessment",
+      title: "Cloud Security Assessment Lab",
       status: "Planned",
-      description: "Audit AWS and Azure misconfigurations.",
-      tags: ["ScoutSuite","Prowler"]
+      description:
+        "Planned lab for learning how cloud environments are assessed for common configuration and security issues across identity, storage, networking, and access controls.",
+      tags: ["AWS", "Azure", "Prowler", "Cloud Security"],
     },
+
     {
-      title: "Static & Dynamic Malware Analysis Lab",
+      title: "Malware Analysis Fundamentals Lab",
       status: "Planned",
-      description: "Reverse engineer malware samples.",
-      tags: ["Ghidra","Radare2"]
-    }
+      description:
+        "Planned isolated lab for learning the fundamentals of static and dynamic malware analysis, including file behavior, indicators, and basic analysis techniques.",
+      tags: ["Ghidra", "Static Analysis", "Dynamic Analysis", "Malware Analysis"],
+    },
   ];
 
   const total = projects.length;
 
-  const next = () => setActiveIndex((prev) => (prev + 1) % total);
-  const prev = () => setActiveIndex((prev) => (prev - 1 + total) % total);
+  const next = () => {
+    setActiveIndex((prev) => (prev + 1) % total);
+  };
+
+  const prev = () => {
+    setActiveIndex((prev) => (prev - 1 + total) % total);
+  };
 
   const CARD_WIDTH = 360;
   const GAP = 40;
 
   const getStatusStyle = (status: Project["status"]) => {
-    if (status === "Completed") return { color:"#6ee7b7" };
-    if (status === "Underway") return { color:"#93c5fd" };
-    return { color:"#fde68a" };
+    if (status === "Completed") return { color: "#6ee7b7" };
+    if (status === "Underway") return { color: "#93c5fd" };
+    return { color: "#fde68a" };
   };
 
   return (
+    <section
+      id="projects"
+      style={{
+        background: "#000",
+        padding: "120px 0",
+        overflow: "hidden",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "1200px",
+          margin: "0 auto",
+          padding: "0 40px",
+        }}
+      >
+        <div
+          style={{
+            textAlign: "center",
+            marginBottom: "70px",
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "48px",
+              fontWeight: "700",
+              color: "#fff",
+            }}
+          >
+            Security Projects
+          </h2>
 
-<section id="projects" style={{background:"#000",padding:"120px 0",overflow:"hidden"}}>
+          <p
+            style={{
+              color: "#6b7280",
+              fontSize: "14px",
+            }}
+          >
+            Hands-on cybersecurity projects built in controlled lab
+            environments.
+          </p>
+        </div>
 
-<div style={{maxWidth:"1200px",margin:"0 auto",padding:"0 40px"}}>
+        {/* Navigation */}
 
-<div style={{textAlign:"center",marginBottom:"70px"}}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "20px",
+          }}
+        >
+          <button
+            onClick={prev}
+            aria-label="Previous project"
+            style={{
+              background: "none",
+              border: "1px solid rgba(255,255,255,0.2)",
+              padding: "10px",
+              borderRadius: "50%",
+              cursor: "pointer",
+              color: "#9ca3af",
+            }}
+          >
+            <ChevronLeft size={22} />
+          </button>
 
-<h2 style={{fontSize:"48px",fontWeight:"700",color:"#fff"}}>
-Security Projects
-</h2>
+          {/* Carousel */}
 
-<p style={{color:"#6b7280",fontSize:"14px"}}>
-All projects are built in a controlled lab environment for defensive security learning.
-</p>
+          <div
+            style={{
+              overflow: "hidden",
+              width: "100%",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                gap: `${GAP}px`,
+                transform: `translateX(calc(50% - ${
+                  CARD_WIDTH / 2
+                }px - ${activeIndex * (CARD_WIDTH + GAP)}px))`,
+                transition:
+                  "transform 0.6s cubic-bezier(.22,1,.36,1)",
+              }}
+            >
+              {projects.map((project, index) => {
+                const diff = index - activeIndex;
+                const isActive = diff === 0;
 
-</div>
+                return (
+                  <div
+                    key={index}
+                    style={{
+                      width: `${CARD_WIDTH}px`,
+                      flexShrink: 0,
+                      transform: isActive
+                        ? "scale(1)"
+                        : "scale(0.85)",
+                      opacity: isActive ? 1 : 0.4,
+                      transition: "all 0.5s ease",
+                    }}
+                  >
+                    <div
+                      style={{
+                        borderRadius: "18px",
+                        padding: "28px",
+                        border: isActive
+                          ? "1px solid #06b6d4"
+                          : "1px solid rgba(255,255,255,0.08)",
+                        background: isActive
+                          ? "rgba(6,182,212,0.05)"
+                          : "rgba(255,255,255,0.02)",
+                        boxShadow: isActive
+                          ? "0 0 40px rgba(6,182,212,0.25)"
+                          : "none",
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      {/* Status */}
 
-{/* Navigation */}
+                      <span
+                        style={{
+                          fontSize: "11px",
+                          ...getStatusStyle(project.status),
+                        }}
+                      >
+                        {project.status}
+                      </span>
 
-<div style={{display:"flex",alignItems:"center",gap:"20px"}}>
+                      {/* Title */}
 
-<button onClick={prev} style={{
-background:"none",
-border:"1px solid rgba(255,255,255,0.2)",
-padding:"10px",
-borderRadius:"50%",
-cursor:"pointer",
-color:"#9ca3af"
-}}>
-<ChevronLeft size={22}/>
-</button>
+                      <h3
+                        style={{
+                          color: "#fff",
+                          fontSize: "18px",
+                          margin: "10px 0",
+                        }}
+                      >
+                        {project.title}
+                      </h3>
 
-{/* Carousel */}
+                      {/* Description */}
 
-<div style={{
-overflow:"hidden",
-width:"100%"
-}}>
+                      <p
+                        style={{
+                          color: "#9ca3af",
+                          fontSize: "14px",
+                          lineHeight: "1.7",
+                        }}
+                      >
+                        {project.description}
+                      </p>
 
-<div style={{
-display:"flex",
-gap:`${GAP}px`,
-transform:`translateX(calc(50% - ${CARD_WIDTH/2}px - ${activeIndex*(CARD_WIDTH+GAP)}px))`,
-transition:"transform 0.6s cubic-bezier(.22,1,.36,1)"
-}}>
+                      {/* Tags */}
 
-{projects.map((project,index)=>{
+                      <div
+                        style={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          gap: "8px",
+                          marginTop: "18px",
+                        }}
+                      >
+                        {project.tags.map((tag, i) => (
+                          <span
+                            key={i}
+                            style={{
+                              fontSize: "11px",
+                              padding: "4px 9px",
+                              borderRadius: "999px",
+                              background:
+                                "rgba(255,255,255,0.04)",
+                              border:
+                                "1px solid rgba(255,255,255,0.08)",
+                              color: "#9ca3af",
+                            }}
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
 
-const diff=index-activeIndex;
-const isActive=diff===0;
+                      {/* Bottom Buttons */}
 
-return(
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          marginTop: "auto",
+                          paddingTop: "24px",
+                        }}
+                      >
+                        {/* DETAILS */}
 
-<div key={index} style={{
-width:`${CARD_WIDTH}px`,
-flexShrink:0,
-transform:isActive?"scale(1)":"scale(0.85)",
-opacity:isActive?1:0.4,
-transition:"all 0.5s ease"
-}}>
+                        <button
+                          onClick={
+                            index === 0
+                              ? onViewHostProject
+                              : index === 1
+                              ? onViewWindowsProject
+                              : undefined
+                          }
+                          style={{
+                            background: "none",
+                            border: "none",
+                            color: "#e5e7eb",
+                            cursor:
+                              index === 0 || index === 1
+                                ? "pointer"
+                                : "default",
+                            fontSize: "14px",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "6px",
+                          }}
+                        >
+                          Details <ExternalLink size={14} />
+                        </button>
 
-<div style={{
-borderRadius:"18px",
-padding:"28px",
-border:isActive?"1px solid #06b6d4":"1px solid rgba(255,255,255,0.08)",
-background:isActive?"rgba(6,182,212,0.05)":"rgba(255,255,255,0.02)",
-boxShadow:isActive?"0 0 40px rgba(6,182,212,0.25)":"none",
-height:"100%",
-display:"flex",
-flexDirection:"column"
-}}>
+                        {/* GITHUB */}
 
-<span style={{fontSize:"11px",...getStatusStyle(project.status)}}>
-{project.status}
-</span>
+                        {project.githubLink && (
+                          <button
+                            onClick={() =>
+                              window.open(
+                                project.githubLink,
+                                "_blank",
+                                "noopener,noreferrer"
+                              )
+                            }
+                            style={{
+                              background: "none",
+                              border: "none",
+                              color: "#9ca3af",
+                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "6px",
+                            }}
+                          >
+                            <Github size={15} /> GitHub
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
 
-<h3 style={{color:"#fff",fontSize:"18px",margin:"10px 0"}}>
-{project.title}
-</h3>
+          <button
+            onClick={next}
+            aria-label="Next project"
+            style={{
+              background: "none",
+              border: "1px solid rgba(255,255,255,0.2)",
+              padding: "10px",
+              borderRadius: "50%",
+              cursor: "pointer",
+              color: "#9ca3af",
+            }}
+          >
+            <ChevronRight size={22} />
+          </button>
+        </div>
 
-<p style={{color:"#9ca3af",fontSize:"14px"}}>
-{project.description}
-</p>
+        {/* Project Counter */}
 
-<div style={{display:"flex",flexWrap:"wrap",gap:"8px",marginTop:"18px"}}>
-{project.tags.map((tag,i)=>(
-<span key={i} style={{
-fontSize:"11px",
-padding:"4px 9px",
-borderRadius:"999px",
-background:"rgba(255,255,255,0.04)",
-border:"1px solid rgba(255,255,255,0.08)",
-color:"#9ca3af"
-}}>
-{tag}
-</span>
-))}
-</div>
-
-{/* Bottom Buttons */}
-
-<div style={{
-display:"flex",
-justifyContent:"space-between",
-alignItems:"center",
-marginTop:"auto",
-paddingTop:"24px"
-}}>
-
-{/* DETAILS */}
-
-<button
-onClick={index===0?onViewHostProject:index===1?onViewWindowsProject:undefined}
-style={{
-background:"none",
-border:"none",
-color:"#e5e7eb",
-cursor:"pointer",
-fontSize:"14px",
-display:"flex",
-alignItems:"center",
-gap:"6px"
-}}
->
-Details <ExternalLink size={14}/>
-</button>
-
-{/* GITHUB */}
-
-{project.githubLink && (
-
-<button
-onClick={()=>window.open(project.githubLink,"_blank")}
-style={{
-background:"none",
-border:"none",
-color:"#9ca3af",
-cursor:"pointer",
-display:"flex",
-alignItems:"center",
-gap:"6px"
-}}
->
-<Github size={15}/> GitHub
-</button>
-
-)}
-
-</div>
-
-</div>
-
-</div>
-
-)
-
-})}
-
-</div>
-
-</div>
-
-<button onClick={next} style={{
-background:"none",
-border:"1px solid rgba(255,255,255,0.2)",
-padding:"10px",
-borderRadius:"50%",
-cursor:"pointer",
-color:"#9ca3af"
-}}>
-<ChevronRight size={22}/>
-</button>
-
-</div>
-
-<p style={{
-textAlign:"center",
-marginTop:"30px",
-color:"#374151",
-fontSize:"12px",
-letterSpacing:"0.2em"
-}}>
-{activeIndex+1} / {total}
-</p>
-
-</div>
-
-</section>
-
-);
+        <p
+          style={{
+            textAlign: "center",
+            marginTop: "30px",
+            color: "#374151",
+            fontSize: "12px",
+            letterSpacing: "0.2em",
+          }}
+        >
+          {activeIndex + 1} / {total}
+        </p>
+      </div>
+    </section>
+  );
 }

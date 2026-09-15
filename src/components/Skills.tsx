@@ -9,13 +9,13 @@ export default function Skills() {
   const skills = [
     "Network Traffic Analysis",
     "Threat Detection",
-    "Incident Response",
+    "Security Monitoring",
     "Log Analysis",
+    "Incident Investigation",
     "MITRE ATT&CK Mapping",
-    "Malware Behaviour Analysis",
+    "Malware Analysis Fundamentals",
     "Phishing Investigation",
-    "SIEM Rule Writing",
-    "Security Monitoring"
+    "SIEM & Detection Fundamentals"
   ];
 
   const tools = [
@@ -42,8 +42,8 @@ export default function Skills() {
           </h2>
 
           <p className="text-gray-400 max-w-xl mx-auto">
-            Core SOC analyst capabilities and tools used for security monitoring,
-            threat detection and incident response.
+            Practical cybersecurity skills and tools focused on security monitoring,
+            log analysis, threat detection and incident investigation.
           </p>
         </div>
 

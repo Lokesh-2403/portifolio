@@ -103,7 +103,7 @@ export default function Hero() {
             <div className="flex-shrink-0">
               <img
                 src={profile}
-                alt="Lokesh Babu Adusumalli — Cybersecurity Student and Aspiring SOC Analyst"
+                alt="Lokesh Babu Adusumalli — Cybersecurity Student and Aspiring Junior Cybersecurity Analyst"
                 title="Lokesh Babu Adusumalli"
                 width="208"
                 height="208"
@@ -124,7 +124,7 @@ export default function Hero() {
 
                 {/* Professional Identity */}
                 <h2 className="text-lg lg:text-xl font-semibold text-accent-cyan">
-                  Cybersecurity Student · Aspiring SOC Analyst
+                   Aspiring Junior Cybersecurity Analyst
                 </h2>
 
                 <p className="text-lg lg:text-xl text-gray-300 font-medium tracking-wide">

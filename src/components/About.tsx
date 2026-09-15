@@ -1,6 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 
-function StatCard({ value, label, suffix = "" }: { value: number; label: string; suffix?: string }) {
+function StatCard({
+  value,
+  label,
+  suffix = "",
+}: {
+  value: number;
+  label: string;
+  suffix?: string;
+}) {
   const [count, setCount] = useState(0);
   const [hovered, setHovered] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -15,17 +23,22 @@ function StatCard({ value, label, suffix = "" }: { value: number; label: string;
       },
       { threshold: 0.5 }
     );
+
     if (ref.current) observer.observe(ref.current);
+
     return () => observer.disconnect();
   }, [started]);
 
   useEffect(() => {
     if (!started) return;
+
     let start = 0;
     const duration = 1500;
     const increment = value / (duration / 16);
+
     const timer = setInterval(() => {
       start += increment;
+
       if (start >= value) {
         setCount(value);
         clearInterval(timer);
@@ -33,6 +46,7 @@ function StatCard({ value, label, suffix = "" }: { value: number; label: string;
         setCount(Math.floor(start));
       }
     }, 16);
+
     return () => clearInterval(timer);
   }, [started, value]);
 
@@ -72,7 +86,8 @@ function StatCard({ value, label, suffix = "" }: { value: number; label: string;
           textShadow: hovered ? "0 0 20px rgba(6,182,212,0.5)" : "none",
         }}
       >
-        {count}{suffix}
+        {count}
+        {suffix}
       </div>
 
       {/* Label */}
@@ -90,7 +105,11 @@ function StatCard({ value, label, suffix = "" }: { value: number; label: string;
 
 export default function About() {
   return (
-    <section id="about" className="relative py-24" style={{ backgroundColor: "#000000" }}>
+    <section
+      id="about"
+      className="relative py-24"
+      style={{ backgroundColor: "#000000" }}
+    >
       <div className="container mx-auto px-6 lg:px-12">
         <div className="max-w-4xl mx-auto">
 
@@ -99,6 +118,7 @@ export default function About() {
             <h2 className="text-4xl lg:text-5xl font-bold text-text-primary font-poppins mb-4 tracking-tight">
               About Me
             </h2>
+
             <div className="relative h-px bg-gradient-to-r from-transparent via-accent-cyan to-transparent opacity-50 max-w-md mx-auto">
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-cyan to-transparent blur-sm"></div>
             </div>
@@ -106,25 +126,40 @@ export default function About() {
 
           {/* ── ABOUT TEXT ── */}
           <div className="bg-primary-bg/50 backdrop-blur-sm rounded-2xl p-8 lg:p-12 border border-white/8 hover:border-accent-blue/30 transition-all duration-500">
+
             <p className="text-text-secondary text-lg leading-relaxed">
-              I am a dedicated beginner cybersecurity analyst working towards building a strong foundation
-              in defensive security practices. My focus lies in understanding network behavior, identifying
-              vulnerabilities, and learning how security teams detect and respond to threats.
+              I am{" "}
+              <strong className="text-white">
+                Lokesh Babu Adusumalli
+              </strong>
+              , a cybersecurity student from Bengaluru, India, currently
+              studying at Dayananda Sagar College of Engineering. I am focused
+              on developing practical skills in security monitoring, network
+              security, vulnerability assessment, log analysis, and incident
+              investigation.
             </p>
+
             <p className="text-text-secondary text-lg leading-relaxed mt-6">
-              Through hands-on lab environments and structured learning paths, I continuously improve my
-              skills in networking fundamentals, system security, and basic threat analysis. My goal is to
-              contribute to a Security Operations Center (SOC) environment and grow into a skilled security
-              professional.
+              Through hands-on labs and security projects, I am building a
+              strong foundation in cybersecurity, SOC operations, threat
+              detection, and security analysis. I am particularly interested
+              in understanding how cyberattacks occur, analyzing security
+              events, and learning how security teams detect and respond to
+              threats. My goal is to begin my career as a{" "}
+              <strong className="text-white">
+                Junior Cybersecurity Analyst
+              </strong>
+              .
             </p>
+
           </div>
 
           {/* ── STATS ── */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-10">
-            <StatCard value={2}   label="Projects Completed" />
-            <StatCard value={5}   label="Tools Mastered" />
+            <StatCard value={2} label="Projects Completed" />
+            <StatCard value={5} label="Tools Practiced" />
             <StatCard value={881} label="Events Analyzed" />
-            <StatCard value={1}   label="Security Reports" />
+            <StatCard value={1} label="Security Reports" />
           </div>
 
         </div>
