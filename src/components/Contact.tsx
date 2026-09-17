@@ -23,7 +23,7 @@ export default function Contact() {
     {
       icon: <Linkedin className="w-5 h-5" />,
       label: "LinkedIn",
-      href: "https://www.linkedin.com/in/lokesh-adusumalli-38646b329",
+      href: "https://www.linkedin.com/in/lokeshbabuadusumalli/",
       color: "text-blue-500",
       bg: "bg-blue-500/10",
       hoverBg: "hover:bg-blue-500/20",
