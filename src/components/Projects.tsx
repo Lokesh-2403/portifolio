@@ -1,13 +1,64 @@
 import { useState, useEffect } from "react";
-import { ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ExternalLink,
+  ChevronLeft,
+  ChevronRight,
+  Github,
+  Youtube,
+} from "lucide-react";
 
-interface Project {
+export interface Project {
   title: string;
   description: string;
   tags: string[];
-  status: "Planned" | "Underway" | "Completed";
-  githubLink?: string;
+  github?: string;
+  youtube?: string;
 }
+
+export const projects: Project[] = [
+  {
+    title: "Host-Based Network Reconnaissance & Service Enumeration",
+    description:
+      "Performed controlled network reconnaissance using Nmap to identify live hosts, enumerate open ports, detect services, and perform basic OS fingerprinting in a lab environment.",
+    tags: [
+      "Kali Linux",
+      "Nmap",
+      "TCP SYN Scan",
+      "Service Enumeration",
+      "OS Detection",
+    ],
+  },
+
+  {
+    title: "Windows Security Event Log Analysis & Threat Detection",
+    description:
+      "Analyzed Windows Security Event Logs to investigate authentication activity and identify suspicious login patterns using a practical log investigation workflow.",
+    tags: [
+      "Windows Event Viewer",
+      "Log Analysis",
+      "Threat Detection",
+      "Security Monitoring",
+    ],
+  },
+
+  {
+    title:
+      "SIH26237: Cryptographic Attribution & Immutable Decryption Provenance",
+    description:
+      "A post-quantum secure document distribution system that generates recipient- and session-specific forensic watermarks during decryption, cryptographically signs each decryption event, and records the evidence in an offline tamper-evident distributed ledger for verifiable leak attribution.",
+    tags: [
+      "Python",
+      "FastAPI",
+      "AES-256-GCM",
+      "ML-KEM-768",
+      "ML-DSA-65",
+      "Forensic Watermarking",
+      "Distributed Ledger",
+    ],
+    github: "https://github.com/Lokesh-2403/SIH26237",
+    youtube: "https://www.youtube.com/watch?v=wMYIlkYO_ok",
+  },
+];
 
 interface ProjectsProps {
   onViewHostProject: () => void;
@@ -20,105 +71,9 @@ export default function Projects({
 }: ProjectsProps) {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  /* Always scroll to top when page opens */
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  const projects: Project[] = [
-    {
-      title: "Host-Based Network Reconnaissance & Service Enumeration",
-      status: "Completed",
-      description:
-        "Performed controlled network reconnaissance using Nmap to identify live hosts, enumerate open ports, detect services, and perform basic OS fingerprinting in a lab environment.",
-      tags: [
-        "Kali Linux",
-        "Nmap",
-        "TCP SYN Scan",
-        "Service Enumeration",
-        "OS Detection",
-      ],
-      githubLink:
-        "https://github.com/Lokesh-2403/host-based-reconnaissance",
-    },
-
-    {
-      title: "Windows Security Event Log Analysis & Threat Detection",
-      status: "Completed",
-      description:
-        "Analyzed Windows Security Event Logs to investigate authentication activity and identify suspicious login patterns using a practical log investigation workflow.",
-      tags: [
-        "Windows Event Viewer",
-        "Log Analysis",
-        "Threat Detection",
-        "Security Monitoring",
-      ],
-      githubLink: "https://github.com/Lokesh-2403/windows-login",
-    },
-
-    {
-      title: "Linux SSH Brute Force Detection System",
-      status: "Completed",
-      description:
-        "Analyzed Linux authentication logs and used Bash, Python, and regular expressions to identify repeated failed SSH login attempts associated with brute-force activity.",
-      tags: [
-        "Kali Linux",
-        "Bash",
-        "Python",
-        "Regex",
-        "Log Analysis",
-      ],
-      githubLink: "https://github.com/Lokesh-2403/ssh-brute-force",
-    },
-
-    {
-      title: "Endpoint Security Monitoring",
-      status: "Underway",
-      description:
-        "Building a controlled Linux endpoint monitoring lab to observe system activity, authentication events, processes, and security-related logs.",
-      tags: ["Wazuh", "Auditd", "Syslog", "Endpoint Monitoring"],
-    },
-
-    {
-      title: "Web Application Security Testing Lab",
-      status: "Planned",
-      description:
-        "Planned hands-on lab for learning common web application vulnerabilities and understanding how security testing tools are used to identify them.",
-      tags: ["Burp Suite", "OWASP ZAP", "SQL Injection", "XSS"],
-    },
-
-    {
-      title: "SIEM & Threat Hunting Lab",
-      status: "Planned",
-      description:
-        "Planned security monitoring lab focused on collecting logs, creating basic detections, investigating security events, and learning threat-hunting workflows.",
-      tags: ["Splunk", "ELK", "Log Analysis", "Threat Hunting"],
-    },
-
-    {
-      title: "Active Directory Security Lab",
-      status: "Planned",
-      description:
-        "Planned Windows Active Directory lab for learning common attack techniques, authentication weaknesses, privilege escalation concepts, and defensive detection.",
-      tags: ["Active Directory", "BloodHound", "Windows Security"],
-    },
-
-    {
-      title: "Cloud Security Assessment Lab",
-      status: "Planned",
-      description:
-        "Planned lab for learning how cloud environments are assessed for common configuration and security issues across identity, storage, networking, and access controls.",
-      tags: ["AWS", "Azure", "Prowler", "Cloud Security"],
-    },
-
-    {
-      title: "Malware Analysis Fundamentals Lab",
-      status: "Planned",
-      description:
-        "Planned isolated lab for learning the fundamentals of static and dynamic malware analysis, including file behavior, indicators, and basic analysis techniques.",
-      tags: ["Ghidra", "Static Analysis", "Dynamic Analysis", "Malware Analysis"],
-    },
-  ];
 
   const total = projects.length;
 
@@ -132,12 +87,6 @@ export default function Projects({
 
   const CARD_WIDTH = 360;
   const GAP = 40;
-
-  const getStatusStyle = (status: Project["status"]) => {
-    if (status === "Completed") return { color: "#6ee7b7" };
-    if (status === "Underway") return { color: "#93c5fd" };
-    return { color: "#fde68a" };
-  };
 
   return (
     <section
@@ -183,7 +132,6 @@ export default function Projects({
         </div>
 
         {/* Navigation */}
-
         <div
           style={{
             display: "flex",
@@ -207,7 +155,6 @@ export default function Projects({
           </button>
 
           {/* Carousel */}
-
           <div
             style={{
               overflow: "hidden",
@@ -260,19 +207,7 @@ export default function Projects({
                         flexDirection: "column",
                       }}
                     >
-                      {/* Status */}
-
-                      <span
-                        style={{
-                          fontSize: "11px",
-                          ...getStatusStyle(project.status),
-                        }}
-                      >
-                        {project.status}
-                      </span>
-
                       {/* Title */}
-
                       <h3
                         style={{
                           color: "#fff",
@@ -284,7 +219,6 @@ export default function Projects({
                       </h3>
 
                       {/* Description */}
-
                       <p
                         style={{
                           color: "#9ca3af",
@@ -296,7 +230,6 @@ export default function Projects({
                       </p>
 
                       {/* Tags */}
-
                       <div
                         style={{
                           display: "flex",
@@ -325,66 +258,142 @@ export default function Projects({
                       </div>
 
                       {/* Bottom Buttons */}
-
                       <div
                         style={{
                           display: "flex",
-                          justifyContent: "space-between",
+                          flexWrap: "wrap",
                           alignItems: "center",
+                          gap: "10px",
                           marginTop: "auto",
                           paddingTop: "24px",
                         }}
                       >
                         {/* DETAILS */}
-
-                        <button
-                          onClick={
-                            index === 0
-                              ? onViewHostProject
-                              : index === 1
-                              ? onViewWindowsProject
-                              : undefined
-                          }
-                          style={{
-                            background: "none",
-                            border: "none",
-                            color: "#e5e7eb",
-                            cursor:
-                              index === 0 || index === 1
-                                ? "pointer"
-                                : "default",
-                            fontSize: "14px",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "6px",
-                          }}
-                        >
-                          Details <ExternalLink size={14} />
-                        </button>
-
-                        {/* GITHUB */}
-
-                        {project.githubLink && (
+                        {(index === 0 || index === 1) && (
                           <button
-                            onClick={() =>
-                              window.open(
-                                project.githubLink,
-                                "_blank",
-                                "noopener,noreferrer"
-                              )
+                            onClick={
+                              index === 0
+                                ? onViewHostProject
+                                : onViewWindowsProject
                             }
                             style={{
-                              background: "none",
-                              border: "none",
-                              color: "#9ca3af",
-                              cursor: "pointer",
-                              display: "flex",
+                              display: "inline-flex",
                               alignItems: "center",
-                              gap: "6px",
+                              justifyContent: "center",
+                              gap: "7px",
+                              padding: "8px 14px",
+                              borderRadius: "8px",
+                              border:
+                                "1px solid rgba(6,182,212,0.45)",
+                              background:
+                                "rgba(6,182,212,0.08)",
+                              color: "#67e8f9",
+                              cursor: "pointer",
+                              fontSize: "13px",
+                              fontWeight: "500",
+                              transition: "all 0.3s ease",
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background =
+                                "rgba(6,182,212,0.18)";
+                              e.currentTarget.style.borderColor =
+                                "#06b6d4";
+                              e.currentTarget.style.boxShadow =
+                                "0 0 14px rgba(6,182,212,0.2)";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background =
+                                "rgba(6,182,212,0.08)";
+                              e.currentTarget.style.borderColor =
+                                "rgba(6,182,212,0.45)";
+                              e.currentTarget.style.boxShadow =
+                                "none";
                             }}
                           >
-                            <Github size={15} /> GitHub
+                            Details <ExternalLink size={14} />
                           </button>
+                        )}
+
+                        {/* GITHUB */}
+                        {project.github && (
+                          <a
+                            href={project.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              gap: "7px",
+                              padding: "8px 14px",
+                              borderRadius: "8px",
+                              border:
+                                "1px solid rgba(255,255,255,0.18)",
+                              background:
+                                "rgba(255,255,255,0.04)",
+                              color: "#e5e7eb",
+                              textDecoration: "none",
+                              fontSize: "13px",
+                              fontWeight: "500",
+                              transition: "all 0.3s ease",
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background =
+                                "rgba(255,255,255,0.1)";
+                              e.currentTarget.style.borderColor =
+                                "rgba(255,255,255,0.35)";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background =
+                                "rgba(255,255,255,0.04)";
+                              e.currentTarget.style.borderColor =
+                                "rgba(255,255,255,0.18)";
+                            }}
+                          >
+                            <Github size={15} />
+                            GitHub
+                          </a>
+                        )}
+
+                        {/* YOUTUBE */}
+                        {project.youtube && (
+                          <a
+                            href={project.youtube}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              gap: "7px",
+                              padding: "8px 14px",
+                              borderRadius: "8px",
+                              border:
+                                "1px solid rgba(255,255,255,0.18)",
+                              background:
+                                "rgba(255,255,255,0.04)",
+                              color: "#e5e7eb",
+                              textDecoration: "none",
+                              fontSize: "13px",
+                              fontWeight: "500",
+                              transition: "all 0.3s ease",
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background =
+                                "rgba(255,255,255,0.1)";
+                              e.currentTarget.style.borderColor =
+                                "rgba(255,255,255,0.35)";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background =
+                                "rgba(255,255,255,0.04)";
+                              e.currentTarget.style.borderColor =
+                                "rgba(255,255,255,0.18)";
+                            }}
+                          >
+                            <Youtube size={16} />
+                            Demo
+                          </a>
                         )}
                       </div>
                     </div>
@@ -411,7 +420,6 @@ export default function Projects({
         </div>
 
         {/* Project Counter */}
-
         <p
           style={{
             textAlign: "center",
@@ -421,7 +429,7 @@ export default function Projects({
             letterSpacing: "0.2em",
           }}
         >
-          {activeIndex + 1} / {total}
+          {activeIndex + 1}
         </p>
       </div>
     </section>

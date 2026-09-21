@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { projects } from "./Projects";
 
 function StatCard({
   value,
@@ -83,7 +84,9 @@ function StatCard({
         className="text-4xl font-black mb-1 transition-all duration-300"
         style={{
           color: hovered ? "#06b6d4" : "#ffffff",
-          textShadow: hovered ? "0 0 20px rgba(6,182,212,0.5)" : "none",
+          textShadow: hovered
+            ? "0 0 20px rgba(6,182,212,0.5)"
+            : "none",
         }}
       >
         {count}
@@ -94,7 +97,9 @@ function StatCard({
       <div
         className="text-xs font-semibold uppercase tracking-widest text-center transition-all duration-300"
         style={{
-          color: hovered ? "rgba(0,255,255,0.8)" : "rgba(255,255,255,0.4)",
+          color: hovered
+            ? "rgba(0,255,255,0.8)"
+            : "rgba(255,255,255,0.4)",
         }}
       >
         {label}
@@ -155,11 +160,21 @@ export default function About() {
           </div>
 
           {/* ── STATS ── */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-10">
-            <StatCard value={2} label="Projects Completed" />
-            <StatCard value={5} label="Tools Practiced" />
-            <StatCard value={881} label="Events Analyzed" />
-            <StatCard value={1} label="Security Reports" />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10">
+            <StatCard
+              value={projects.length}
+              label="Projects Completed"
+            />
+
+            <StatCard
+              value={1}
+              label="CTFs Completed"
+            />
+
+            <StatCard
+              value={1}
+              label="Hackathons"
+            />
           </div>
 
         </div>
