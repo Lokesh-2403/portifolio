@@ -1,3 +1,4 @@
+
 import React from "react";
 
 import screenshot1 from "../assets/projects/host/Screenshot1.png";
@@ -47,13 +48,13 @@ const HostBasedProject: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0a0f2c] text-white px-6 md:px-20 py-16">
-      
-      <h1 className="text-4xl font-bold text-cyan-400 mb-6">
+    <div className="min-h-screen bg-[#0b1320] text-[#f2efe8] px-6 md:px-20 py-16">
+
+      <h1 className="text-4xl font-bold text-[#b46a55] mb-6">
         Host-Based Network Reconnaissance & Service Enumeration
       </h1>
 
-      <p className="text-gray-300 max-w-4xl mb-16 leading-relaxed">
+      <p className="text-[#c7b8a6] max-w-4xl mb-16 leading-relaxed">
         This project demonstrates practical network reconnaissance performed
         on my local system using Nmap. The objective was to identify live hosts,
         enumerate open ports, detect services, and determine the operating system.
@@ -61,32 +62,32 @@ const HostBasedProject: React.FC = () => {
 
       {sections.map((section, index) => (
         <div key={index} className="mb-24">
-          <h2 className="text-2xl font-semibold text-cyan-300 mb-6">
+          <h2 className="text-2xl font-semibold text-[#c7b8a6] mb-6">
             {section.title}
           </h2>
 
           <img
             src={section.image}
             alt={section.title}
-            className="rounded-xl border border-cyan-500/20 shadow-lg mb-6"
+            className="rounded-xl border border-[#b46a55]/20 shadow-lg mb-6"
           />
 
-          <div className="bg-[#111633] p-4 rounded-lg mb-4 text-green-400 font-mono">
+          <div className="bg-[#1f2a44] p-4 rounded-lg mb-4 text-[#c7b8a6] font-mono">
             {section.command}
           </div>
 
-          <p className="text-gray-300 leading-relaxed">
+          <p className="text-[#c7b8a6] leading-relaxed">
             {section.explanation}
           </p>
         </div>
       ))}
 
-      <div className="bg-[#111633] p-8 rounded-xl border border-cyan-500/20">
-        <h2 className="text-2xl text-cyan-400 font-semibold mb-4">
+      <div className="bg-[#1f2a44] p-8 rounded-xl border border-[#b46a55]/20">
+        <h2 className="text-2xl text-[#b46a55] font-semibold mb-4">
           Final Reconnaissance Report
         </h2>
 
-        <ul className="list-disc list-inside text-gray-300 space-y-2">
+        <ul className="list-disc list-inside text-[#c7b8a6] space-y-2">
           <li>Host is active and reachable.</li>
           <li>Port 8080 is open.</li>
           <li>Service running: SimpleHTTPServer (Python 3.13.11).</li>

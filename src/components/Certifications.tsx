@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useState } from 'react';
 import { Lock, ShieldCheck, Terminal } from 'lucide-react';
 
@@ -123,7 +124,7 @@ export default function Certifications() {
       <section
         id="certifications"
         style={{
-          backgroundColor: '#000000',
+          backgroundColor: '#0b1320',
           padding: '96px 0',
           position: 'relative',
           overflow: 'hidden',
@@ -136,7 +137,7 @@ export default function Certifications() {
             inset: 0,
             pointerEvents: 'none',
             backgroundImage:
-              'radial-gradient(circle, rgba(0,229,255,0.04) 1px, transparent 1px)',
+              'radial-gradient(circle, rgba(180,106,85,0.08) 1px, transparent 1px)',
             backgroundSize: '40px 40px',
           }}
         />
@@ -162,7 +163,7 @@ export default function Certifications() {
                 fontFamily: "'Poppins', sans-serif",
                 fontSize: 'clamp(2rem, 5vw, 3rem)',
                 fontWeight: 800,
-                color: '#ffffff',
+                color: '#f2efe8',
                 letterSpacing: '-0.5px',
                 marginBottom: '12px',
               }}
@@ -174,7 +175,7 @@ export default function Certifications() {
               style={{
                 fontFamily: "'Inter', sans-serif",
                 fontSize: '15px',
-                color: 'rgba(255,255,255,0.4)',
+                color: 'rgba(199,184,166,0.7)',
                 maxWidth: '420px',
                 margin: '0 auto',
                 lineHeight: 1.7,
@@ -224,18 +225,18 @@ export default function Certifications() {
                     /* Softer hover border */
                     border: `1px solid ${
                       isHovered
-                        ? 'rgba(0,229,255,0.38)'
-                        : 'rgba(255,255,255,0.07)'
+                        ? 'rgba(180,106,85,0.38)'
+                        : 'rgba(199,184,166,0.07)'
                     }`,
 
                     /* Softer hover background */
                     backgroundColor: isHovered
-                      ? 'rgba(0,229,255,0.035)'
-                      : 'rgba(255,255,255,0.025)',
+                      ? 'rgba(180,106,85,0.035)'
+                      : 'rgba(242,239,232,0.025)',
 
                     /* Softer hover glow */
                     boxShadow: isHovered
-                      ? '0 0 20px 2px rgba(0,229,255,0.10), 0 0 38px 4px rgba(0,229,255,0.035)'
+                      ? '0 0 20px 2px rgba(180,106,85,0.10), 0 0 38px 4px rgba(180,106,85,0.035)'
                       : 'none',
 
                     backdropFilter: 'blur(8px)',
@@ -255,12 +256,12 @@ export default function Certifications() {
 
                       /* Softer icon highlight */
                       backgroundColor: isHovered
-                        ? 'rgba(0,229,255,0.75)'
-                        : 'rgba(0,229,255,0.1)',
+                        ? 'rgba(180,106,85,0.75)'
+                        : 'rgba(180,106,85,0.1)',
 
                       color: isHovered
-                        ? '#000'
-                        : 'rgba(0,229,255,1)',
+                        ? '#0b1320'
+                        : '#b46a55',
 
                       display: 'flex',
                       alignItems: 'center',
@@ -283,7 +284,7 @@ export default function Certifications() {
                         fontSize: '9px',
                         letterSpacing: '3px',
                         textTransform: 'uppercase',
-                        color: 'rgba(0,229,255,0.45)',
+                        color: 'rgba(180,106,85,0.8)',
                         marginBottom: '4px',
                       }}
                     >
@@ -295,7 +296,7 @@ export default function Certifications() {
                         fontFamily: "'Poppins', sans-serif",
                         fontSize: '0.92rem',
                         fontWeight: 700,
-                        color: '#ffffff',
+                        color: '#f2efe8',
                         lineHeight: 1.3,
                         marginBottom: '3px',
                         whiteSpace: 'nowrap',
@@ -310,7 +311,7 @@ export default function Certifications() {
                       style={{
                         fontFamily: "'Inter', sans-serif",
                         fontSize: '11px',
-                        color: 'rgba(255,255,255,0.3)',
+                        color: 'rgba(199,184,166,0.6)',
                         letterSpacing: '0.5px',
                       }}
                     >
@@ -338,10 +339,10 @@ export default function Certifications() {
                         borderRadius: '50%',
                         display: 'inline-block',
                         backgroundColor: dotActive
-                          ? '#00e5ff'
-                          : 'rgba(255,255,255,0.15)',
+                          ? '#b46a55'
+                          : 'rgba(199,184,166,0.2)',
                         boxShadow: dotActive
-                          ? '0 0 7px #00e5ff'
+                          ? '0 0 7px #b46a55'
                           : 'none',
                       }}
                     />
@@ -354,8 +355,8 @@ export default function Certifications() {
                         letterSpacing: '1.5px',
                         textTransform: 'uppercase',
                         color: dotActive
-                          ? 'rgba(0,229,255,0.8)'
-                          : 'rgba(255,255,255,0.18)',
+                          ? 'rgba(180,106,85,0.9)'
+                          : 'rgba(199,184,166,0.35)',
                         writingMode: 'vertical-rl',
                         textOrientation: 'mixed',
                       }}
@@ -376,8 +377,8 @@ export default function Certifications() {
               fontFamily: "'Inter', monospace",
               fontSize: '10px',
               letterSpacing: '3px',
-              color: '#00e5ff',
-              opacity: 0.18,
+              color: '#c7b8a6',
+              opacity: 0.35,
               textTransform: 'uppercase',
             }}
           >

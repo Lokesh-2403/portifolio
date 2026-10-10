@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 
 import Particles, { initParticlesEngine } from "@tsparticles/react";
@@ -28,7 +29,7 @@ export default function CyberBackground() {
       options={{
         background: {
           color: {
-            value: "#0f172a",
+            value: "#0b1320",
           },
         },
 
@@ -43,12 +44,12 @@ export default function CyberBackground() {
           },
 
           color: {
-            value: "#00f5d4",
+            value: "#b46a55",
           },
 
           links: {
             enable: true,
-            color: "#00f5d4",
+            color: "#c7b8a6",
             distance: 150,
             opacity: 0.2,
             width: 1,

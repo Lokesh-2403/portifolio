@@ -1,10 +1,10 @@
+
 import { useState, useEffect } from "react";
 import {
   ExternalLink,
   ChevronLeft,
   ChevronRight,
   Github,
-  Youtube,
 } from "lucide-react";
 
 export interface Project {
@@ -12,7 +12,7 @@ export interface Project {
   description: string;
   tags: string[];
   github?: string;
-  youtube?: string;
+  demo?: string;
 }
 
 export const projects: Project[] = [
@@ -28,7 +28,6 @@ export const projects: Project[] = [
       "OS Detection",
     ],
   },
-
   {
     title: "Windows Security Event Log Analysis & Threat Detection",
     description:
@@ -40,7 +39,6 @@ export const projects: Project[] = [
       "Security Monitoring",
     ],
   },
-
   {
     title:
       "SIH26237: Cryptographic Attribution & Immutable Decryption Provenance",
@@ -56,7 +54,7 @@ export const projects: Project[] = [
       "Distributed Ledger",
     ],
     github: "https://github.com/Lokesh-2403/SIH26237",
-    youtube: "https://www.youtube.com/watch?v=wMYIlkYO_ok",
+    demo: "https://sih-26237.vercel.app",
   },
 ];
 
@@ -92,7 +90,7 @@ export default function Projects({
     <section
       id="projects"
       style={{
-        background: "#000",
+        background: "#0b1320",
         padding: "120px 0",
         overflow: "hidden",
       }}
@@ -114,7 +112,7 @@ export default function Projects({
             style={{
               fontSize: "48px",
               fontWeight: "700",
-              color: "#fff",
+              color: "#f2efe8",
             }}
           >
             Security Projects
@@ -122,7 +120,7 @@ export default function Projects({
 
           <p
             style={{
-              color: "#6b7280",
+              color: "#c7b8a6",
               fontSize: "14px",
             }}
           >
@@ -144,11 +142,11 @@ export default function Projects({
             aria-label="Previous project"
             style={{
               background: "none",
-              border: "1px solid rgba(255,255,255,0.2)",
+              border: "1px solid rgba(199,184,166,0.2)",
               padding: "10px",
               borderRadius: "50%",
               cursor: "pointer",
-              color: "#9ca3af",
+              color: "#c7b8a6",
             }}
           >
             <ChevronLeft size={22} />
@@ -194,13 +192,13 @@ export default function Projects({
                         borderRadius: "18px",
                         padding: "28px",
                         border: isActive
-                          ? "1px solid #06b6d4"
-                          : "1px solid rgba(255,255,255,0.08)",
+                          ? "1px solid #b46a55"
+                          : "1px solid rgba(199,184,166,0.08)",
                         background: isActive
-                          ? "rgba(6,182,212,0.05)"
-                          : "rgba(255,255,255,0.02)",
+                          ? "rgba(180,106,85,0.05)"
+                          : "rgba(242,239,232,0.02)",
                         boxShadow: isActive
-                          ? "0 0 40px rgba(6,182,212,0.25)"
+                          ? "0 0 40px rgba(180,106,85,0.25)"
                           : "none",
                         height: "100%",
                         display: "flex",
@@ -210,7 +208,7 @@ export default function Projects({
                       {/* Title */}
                       <h3
                         style={{
-                          color: "#fff",
+                          color: "#f2efe8",
                           fontSize: "18px",
                           margin: "10px 0",
                         }}
@@ -221,7 +219,7 @@ export default function Projects({
                       {/* Description */}
                       <p
                         style={{
-                          color: "#9ca3af",
+                          color: "#c7b8a6",
                           fontSize: "14px",
                           lineHeight: "1.7",
                         }}
@@ -246,10 +244,10 @@ export default function Projects({
                               padding: "4px 9px",
                               borderRadius: "999px",
                               background:
-                                "rgba(255,255,255,0.04)",
+                                "rgba(199,184,166,0.04)",
                               border:
-                                "1px solid rgba(255,255,255,0.08)",
-                              color: "#9ca3af",
+                                "1px solid rgba(199,184,166,0.12)",
+                              color: "#c7b8a6",
                             }}
                           >
                             {tag}
@@ -284,10 +282,10 @@ export default function Projects({
                               padding: "8px 14px",
                               borderRadius: "8px",
                               border:
-                                "1px solid rgba(6,182,212,0.45)",
+                                "1px solid rgba(180,106,85,0.45)",
                               background:
-                                "rgba(6,182,212,0.08)",
-                              color: "#67e8f9",
+                                "rgba(180,106,85,0.08)",
+                              color: "#b46a55",
                               cursor: "pointer",
                               fontSize: "13px",
                               fontWeight: "500",
@@ -295,17 +293,17 @@ export default function Projects({
                             }}
                             onMouseEnter={(e) => {
                               e.currentTarget.style.background =
-                                "rgba(6,182,212,0.18)";
+                                "rgba(180,106,85,0.18)";
                               e.currentTarget.style.borderColor =
-                                "#06b6d4";
+                                "#b46a55";
                               e.currentTarget.style.boxShadow =
-                                "0 0 14px rgba(6,182,212,0.2)";
+                                "0 0 14px rgba(180,106,85,0.2)";
                             }}
                             onMouseLeave={(e) => {
                               e.currentTarget.style.background =
-                                "rgba(6,182,212,0.08)";
+                                "rgba(180,106,85,0.08)";
                               e.currentTarget.style.borderColor =
-                                "rgba(6,182,212,0.45)";
+                                "rgba(180,106,85,0.45)";
                               e.currentTarget.style.boxShadow =
                                 "none";
                             }}
@@ -328,10 +326,10 @@ export default function Projects({
                               padding: "8px 14px",
                               borderRadius: "8px",
                               border:
-                                "1px solid rgba(255,255,255,0.18)",
+                                "1px solid rgba(199,184,166,0.18)",
                               background:
-                                "rgba(255,255,255,0.04)",
-                              color: "#e5e7eb",
+                                "rgba(199,184,166,0.04)",
+                              color: "#f2efe8",
                               textDecoration: "none",
                               fontSize: "13px",
                               fontWeight: "500",
@@ -339,15 +337,15 @@ export default function Projects({
                             }}
                             onMouseEnter={(e) => {
                               e.currentTarget.style.background =
-                                "rgba(255,255,255,0.1)";
+                                "rgba(199,184,166,0.1)";
                               e.currentTarget.style.borderColor =
-                                "rgba(255,255,255,0.35)";
+                                "rgba(199,184,166,0.35)";
                             }}
                             onMouseLeave={(e) => {
                               e.currentTarget.style.background =
-                                "rgba(255,255,255,0.04)";
+                                "rgba(199,184,166,0.04)";
                               e.currentTarget.style.borderColor =
-                                "rgba(255,255,255,0.18)";
+                                "rgba(199,184,166,0.18)";
                             }}
                           >
                             <Github size={15} />
@@ -355,10 +353,10 @@ export default function Projects({
                           </a>
                         )}
 
-                        {/* YOUTUBE */}
-                        {project.youtube && (
+                        {/* LIVE DEMO */}
+                        {project.demo && (
                           <a
-                            href={project.youtube}
+                            href={project.demo}
                             target="_blank"
                             rel="noopener noreferrer"
                             style={{
@@ -369,10 +367,10 @@ export default function Projects({
                               padding: "8px 14px",
                               borderRadius: "8px",
                               border:
-                                "1px solid rgba(255,255,255,0.18)",
+                                "1px solid rgba(199,184,166,0.18)",
                               background:
-                                "rgba(255,255,255,0.04)",
-                              color: "#e5e7eb",
+                                "rgba(199,184,166,0.04)",
+                              color: "#f2efe8",
                               textDecoration: "none",
                               fontSize: "13px",
                               fontWeight: "500",
@@ -380,19 +378,19 @@ export default function Projects({
                             }}
                             onMouseEnter={(e) => {
                               e.currentTarget.style.background =
-                                "rgba(255,255,255,0.1)";
+                                "rgba(199,184,166,0.1)";
                               e.currentTarget.style.borderColor =
-                                "rgba(255,255,255,0.35)";
+                                "rgba(199,184,166,0.35)";
                             }}
                             onMouseLeave={(e) => {
                               e.currentTarget.style.background =
-                                "rgba(255,255,255,0.04)";
+                                "rgba(199,184,166,0.04)";
                               e.currentTarget.style.borderColor =
-                                "rgba(255,255,255,0.18)";
+                                "rgba(199,184,166,0.18)";
                             }}
                           >
-                            <Youtube size={16} />
-                            Demo
+                            <ExternalLink size={16} />
+                            Live
                           </a>
                         )}
                       </div>
@@ -408,11 +406,11 @@ export default function Projects({
             aria-label="Next project"
             style={{
               background: "none",
-              border: "1px solid rgba(255,255,255,0.2)",
+              border: "1px solid rgba(199,184,166,0.2)",
               padding: "10px",
               borderRadius: "50%",
               cursor: "pointer",
-              color: "#9ca3af",
+              color: "#c7b8a6",
             }}
           >
             <ChevronRight size={22} />
@@ -424,7 +422,7 @@ export default function Projects({
           style={{
             textAlign: "center",
             marginTop: "30px",
-            color: "#374151",
+            color: "#c7b8a6",
             fontSize: "12px",
             letterSpacing: "0.2em",
           }}

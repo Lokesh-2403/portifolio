@@ -1,3 +1,4 @@
+
 import { Shield, FolderOpen, FileText } from "lucide-react";
 import profile from "../assets/profile.jpg.png";
 
@@ -6,21 +7,20 @@ export default function Hero() {
     <section
       id="home"
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
-      style={{ backgroundColor: "#000000" }}
+      style={{ backgroundColor: "#0b1320" }}
     >
-      {/* Subtle Overlay */}
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
+      <div className="absolute inset-0 bg-[#0b1320]/60 backdrop-blur-[2px]" />
 
-      {/* Cyber Shield Animated Background */}
+      {/* Animated background */}
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
         <div className="relative w-full max-w-2xl aspect-square">
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="network-animation">
               <Shield
-                className="w-64 h-64 text-accent-cyan opacity-10"
+                className="w-64 h-64 text-[#b46a55] opacity-15"
                 strokeWidth={0.5}
               />
-              <div className="shield-glow"></div>
+              <div className="shield-glow" />
             </div>
           </div>
 
@@ -36,161 +36,95 @@ export default function Hero() {
                 x2="100%"
                 y2="100%"
               >
-                <stop offset="0%" stopColor="#00D9FF" stopOpacity="0.15" />
-                <stop offset="100%" stopColor="#00D9FF" stopOpacity="0.05" />
+                <stop offset="0%" stopColor="#b46a55" stopOpacity="0.2" />
+                <stop offset="100%" stopColor="#c7b8a6" stopOpacity="0.05" />
               </linearGradient>
             </defs>
 
-            <circle
-              cx="100"
-              cy="100"
-              r="80"
-              fill="none"
-              stroke="url(#gridGradient)"
-              strokeWidth="0.5"
-              opacity="0.2"
-            />
-
-            <circle
-              cx="100"
-              cy="100"
-              r="60"
-              fill="none"
-              stroke="url(#gridGradient)"
-              strokeWidth="0.5"
-              opacity="0.3"
-            />
-
-            <circle
-              cx="100"
-              cy="100"
-              r="40"
-              fill="none"
-              stroke="url(#gridGradient)"
-              strokeWidth="0.5"
-              opacity="0.4"
-            />
-
-            <line
-              x1="100"
-              y1="20"
-              x2="100"
-              y2="180"
-              stroke="url(#gridGradient)"
-              strokeWidth="0.5"
-              opacity="0.15"
-            />
-
-            <line
-              x1="20"
-              y1="100"
-              x2="180"
-              y2="100"
-              stroke="url(#gridGradient)"
-              strokeWidth="0.5"
-              opacity="0.15"
-            />
+            <circle cx="100" cy="100" r="80" fill="none" stroke="url(#gridGradient)" strokeWidth="0.5" opacity="0.4" />
+            <circle cx="100" cy="100" r="60" fill="none" stroke="url(#gridGradient)" strokeWidth="0.5" opacity="0.5" />
+            <circle cx="100" cy="100" r="40" fill="none" stroke="url(#gridGradient)" strokeWidth="0.5" opacity="0.6" />
+            <line x1="100" y1="20" x2="100" y2="180" stroke="url(#gridGradient)" strokeWidth="0.5" opacity="0.3" />
+            <line x1="20" y1="100" x2="180" y2="100" stroke="url(#gridGradient)" strokeWidth="0.5" opacity="0.3" />
           </svg>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-6 lg:px-12 py-20 relative z-10">
+      {/* Main content */}
+      <div className="container mx-auto px-6 lg:px-12 py-24 relative z-10">
         <div className="flex justify-center">
-          <div className="flex flex-col md:flex-row items-center gap-10 max-w-4xl animate-fade-in">
-
-            {/* Profile Image */}
+          <div className="flex flex-col md:flex-row items-center gap-10 max-w-5xl animate-fade-in">
             <div className="flex-shrink-0">
-              <img
-                src={profile}
-                alt="Lokesh Babu Adusumalli — Cybersecurity Student and Aspiring Junior Cybersecurity Analyst"
-                title="Lokesh Babu Adusumalli"
-                width="208"
-                height="208"
-                loading="eager"
-                decoding="async"
-                className="w-40 h-40 md:w-52 md:h-52 rounded-full object-cover border-4 border-accent-cyan shadow-lg shadow-accent-cyan/20"
-              />
+              <div className="relative">
+                <div className="absolute -inset-2 rounded-full bg-[#b46a55]/15 blur-xl" />
+                <img
+                  src={profile}
+                  alt="Lokesh Babu Adusumalli"
+                  title="Lokesh Babu Adusumalli"
+                  width="208"
+                  height="208"
+                  loading="eager"
+                  decoding="async"
+                  className="relative w-40 h-40 md:w-52 md:h-52 rounded-full object-cover border-4 border-[#c7b8a6] shadow-xl shadow-black/30"
+                />
+              </div>
             </div>
 
-            {/* Text Content */}
             <div className="space-y-6 text-center md:text-left">
-              <div className="space-y-3">
+              <div className="space-y-4">
+                <p className="text-sm uppercase tracking-[0.25em] text-[#c7b8a6] font-medium">
+                  Cybersecurity • Security Operations
+                </p>
 
-                {/* Main Name */}
-                <h1 className="text-5xl lg:text-7xl font-bold text-white font-poppins tracking-tight">
+                <h1 className="text-5xl lg:text-7xl font-bold text-[#f2efe8] font-poppins tracking-tight">
                   Lokesh Babu
                 </h1>
 
-                {/* Professional Identity */}
-                <h2 className="text-lg lg:text-xl font-semibold text-accent-cyan">
-                   Aspiring Junior Cybersecurity Analyst
+                <h2 className="text-lg lg:text-xl font-semibold text-[#b46a55]">
+                  Aspiring Junior Cybersecurity Analyst
                 </h2>
 
-                <p className="text-lg lg:text-xl text-gray-300 font-medium tracking-wide">
+                <p className="text-lg lg:text-xl text-[#c7b8a6] font-medium tracking-wide">
                   Learning | Practicing | Building Security Skills
                 </p>
 
-                {/* Buttons */}
-                <div className="flex flex-wrap justify-center md:justify-start gap-6 pt-6">
-
-                  {/* View Projects */}
+                <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-6">
                   <a
                     href="#projects"
-                    className="flex items-center gap-2 px-6 py-3 bg-accent-cyan text-black font-semibold rounded-lg hover:scale-105 transition duration-300 shadow-md shadow-accent-cyan/10"
+                    className="flex items-center gap-2 px-6 py-3 bg-[#b46a55] text-white font-semibold rounded-lg hover:bg-[#c17a64] hover:-translate-y-1 transition duration-300 shadow-lg shadow-[#b46a55]/20"
                   >
                     <FolderOpen size={18} />
                     View Projects
                   </a>
 
-                  {/* Resume */}
                   <a
                     href="#resume"
-                    className="flex items-center gap-2 px-6 py-3 border border-accent-cyan text-accent-cyan font-semibold rounded-lg hover:bg-accent-cyan hover:text-black transition duration-300"
+                    className="flex items-center gap-2 px-6 py-3 border border-[#c7b8a6]/60 text-[#f2efe8] font-semibold rounded-lg hover:bg-[#1f2a44] hover:border-[#b46a55] hover:text-[#c7b8a6] transition duration-300"
                   >
                     <FileText size={18} />
                     Resume
                   </a>
-
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
 
-      {/* Animations */}
       <style>{`
         @keyframes fade-in {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes rotate-slow {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
 
         @keyframes pulse-glow {
-          0%, 100% {
-            opacity: 0.1;
-            transform: scale(1);
-          }
-          50% {
-            opacity: 0.2;
-            transform: scale(1.05);
-          }
+          0%, 100% { opacity: 0.15; transform: scale(1); }
+          50% { opacity: 0.3; transform: scale(1.05); }
         }
 
         .animate-fade-in {
@@ -211,10 +145,20 @@ export default function Hero() {
           inset: -30%;
           background: radial-gradient(
             circle,
-            rgba(0, 217, 255, 0.15) 0%,
+            rgba(180, 106, 85, 0.2) 0%,
+            rgba(199, 184, 166, 0.05) 35%,
             transparent 70%
           );
           animation: pulse-glow 4s ease-in-out infinite;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .animate-fade-in,
+          .animate-rotate-slow,
+          .network-animation,
+          .shield-glow {
+            animation: none;
+          }
         }
       `}</style>
     </section>

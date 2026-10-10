@@ -1,5 +1,5 @@
-import { useState } from "react";
 
+import { useState } from "react";
 
 import Hero from "./components/Hero";
 import About from "./components/About";
@@ -9,7 +9,7 @@ import Certifications from "./components/Certifications";
 import Contact from "./components/Contact";
 
 import Footer from "./components/Footer";
-import CyberCursor from './components/CyberCursor';
+import CyberCursor from "./components/CyberCursor";
 import HostBasedProject from "./pages/HostBasedProject";
 import WindowsEventLogProject from "./pages/WindowsEventLogProject";
 import AIChat from "./components/AIChat";
@@ -25,10 +25,12 @@ function App() {
       <CyberCursor />
 
       {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
+      <div
+        className="absolute inset-0 backdrop-blur-[2px]"
+        style={{ backgroundColor: "rgba(11, 19, 32, 0.4)" }}
+      ></div>
 
       <div className="relative z-10">
-
         {activePage === "home" && (
           <>
             <Hero />
@@ -40,7 +42,6 @@ function App() {
             />
             <Certifications />
             <Contact />
-          
             <Footer />
           </>
         )}
@@ -49,7 +50,7 @@ function App() {
           <>
             <button
               onClick={() => setActivePage("home")}
-              className="text-cyan-400 px-6 pt-6 hover:text-cyan-300 transition-colors"
+              className="text-[#b46a55] px-6 pt-6 hover:text-[#c7b8a6] transition-colors"
             >
               ← Back to Home
             </button>
@@ -61,17 +62,16 @@ function App() {
           <>
             <button
               onClick={() => setActivePage("home")}
-              className="text-cyan-400 px-6 pt-6 hover:text-cyan-300 transition-colors"
+              className="text-[#b46a55] px-6 pt-6 hover:text-[#c7b8a6] transition-colors"
             >
               ← Back to Home
             </button>
             <WindowsEventLogProject />
           </>
         )}
-
       </div>
-     <AIChat />
-      
+
+      <AIChat />
     </div>
   );
 }

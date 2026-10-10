@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Wrench, Shield } from "lucide-react";
 
@@ -30,18 +31,18 @@ export default function Skills() {
   ];
 
   return (
-    <section id="skills" className="relative py-28 bg-black">
+    <section id="skills" className="relative py-28 bg-[#0b1320]">
 
       <div className="container mx-auto px-6">
 
         {/* SECTION TITLE */}
 
         <div className="text-center mb-20">
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4">
+          <h2 className="text-4xl lg:text-5xl font-bold text-[#f2efe8] mb-4">
             Skills & Tools
           </h2>
 
-          <p className="text-gray-400 max-w-xl mx-auto">
+          <p className="text-[#c7b8a6] max-w-xl mx-auto">
             Practical cybersecurity skills and tools focused on security monitoring,
             log analysis, threat detection and incident investigation.
           </p>
@@ -64,18 +65,18 @@ export default function Skills() {
               <div
                 className="flex flex-col items-center justify-center h-full rounded-2xl border cursor-pointer"
                 style={{
-                  borderColor: "rgba(0,210,210,0.4)",
-                  boxShadow: "0 0 25px rgba(0,210,210,0.2)",
-                  background: "rgba(255,255,255,0.02)",
+                  borderColor: "rgba(180,106,85,0.4)",
+                  boxShadow: "0 0 25px rgba(180,106,85,0.2)",
+                  background: "rgba(242,239,232,0.02)",
                   transition: "all 0.5s ease"
                 }}
               >
 
-                <h3 className="text-xl font-semibold text-white">
+                <h3 className="text-xl font-semibold text-[#f2efe8]">
                   Skills & Tools
                 </h3>
 
-                <p className="text-gray-400 text-sm mt-2">
+                <p className="text-[#c7b8a6] text-sm mt-2">
                   Click to explore
                 </p>
 
@@ -96,23 +97,23 @@ export default function Skills() {
                   onMouseLeave={() => setHovered(null)}
                   className="flex-1 rounded-2xl border p-6 transition-all duration-500"
                   style={{
-                    borderColor: "rgba(0,210,210,0.4)",
-                    background: "rgba(255,255,255,0.02)",
+                    borderColor: "rgba(180,106,85,0.4)",
+                    background: "rgba(242,239,232,0.02)",
                     transform: hovered === "skills" ? "scale(1.05)" : "scale(1)",
                     boxShadow:
                       hovered === "skills"
-                        ? "0 0 35px rgba(0,210,210,0.4)"
+                        ? "0 0 35px rgba(180,106,85,0.4)"
                         : "none"
                   }}
                 >
 
                   <div className="flex items-center gap-3 mb-5">
 
-                    <div className="p-2 rounded-lg bg-cyan-500 text-black">
+                    <div className="p-2 rounded-lg bg-[#b46a55] text-[#f2efe8]">
                       <Shield className="w-5 h-5"/>
                     </div>
 
-                    <h3 className="text-lg font-semibold text-cyan-400">
+                    <h3 className="text-lg font-semibold text-[#b46a55]">
                       Skills
                     </h3>
 
@@ -124,9 +125,9 @@ export default function Skills() {
 
                       <li
                         key={i}
-                        className="flex gap-2 text-gray-300 text-sm"
+                        className="flex gap-2 text-[#c7b8a6] text-sm"
                       >
-                        <span className="text-cyan-400">▹</span>
+                        <span className="text-[#b46a55]">▹</span>
                         {skill}
                       </li>
 
@@ -143,23 +144,23 @@ export default function Skills() {
                   onMouseLeave={() => setHovered(null)}
                   className="flex-1 rounded-2xl border p-6 transition-all duration-500"
                   style={{
-                    borderColor: "rgba(0,210,210,0.4)",
-                    background: "rgba(255,255,255,0.02)",
+                    borderColor: "rgba(180,106,85,0.4)",
+                    background: "rgba(242,239,232,0.02)",
                     transform: hovered === "tools" ? "scale(1.05)" : "scale(1)",
                     boxShadow:
                       hovered === "tools"
-                        ? "0 0 35px rgba(0,210,210,0.4)"
+                        ? "0 0 35px rgba(180,106,85,0.4)"
                         : "none"
                   }}
                 >
 
                   <div className="flex items-center gap-3 mb-5">
 
-                    <div className="p-2 rounded-lg bg-cyan-500 text-black">
+                    <div className="p-2 rounded-lg bg-[#b46a55] text-[#f2efe8]">
                       <Wrench className="w-5 h-5"/>
                     </div>
 
-                    <h3 className="text-lg font-semibold text-cyan-400">
+                    <h3 className="text-lg font-semibold text-[#b46a55]">
                       Tools
                     </h3>
 
@@ -171,9 +172,9 @@ export default function Skills() {
 
                       <li
                         key={i}
-                        className="flex gap-2 text-gray-300 text-sm"
+                        className="flex gap-2 text-[#c7b8a6] text-sm"
                       >
-                        <span className="text-cyan-400">▹</span>
+                        <span className="text-[#b46a55]">▹</span>
                         {tool}
                       </li>
 

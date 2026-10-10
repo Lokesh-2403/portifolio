@@ -1,184 +1,199 @@
-import { useState, useEffect, useRef } from "react";
-import { projects } from "./Projects";
 
-function StatCard({
-  value,
-  label,
-  suffix = "",
-}: {
-  value: number;
-  label: string;
-  suffix?: string;
-}) {
-  const [count, setCount] = useState(0);
-  const [hovered, setHovered] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const [started, setStarted] = useState(false);
+import { useState } from "react";
+import { Wrench, Shield } from "lucide-react";
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !started) {
-          setStarted(true);
-        }
-      },
-      { threshold: 0.5 }
-    );
+export default function Skills() {
 
-    if (ref.current) observer.observe(ref.current);
+  const [open, setOpen] = useState(false);
+  const [hovered, setHovered] = useState<string | null>(null);
 
-    return () => observer.disconnect();
-  }, [started]);
+  const skills = [
+    "Network Traffic Analysis",
+    "Threat Detection",
+    "Security Monitoring",
+    "Log Analysis",
+    "Incident Investigation",
+    "MITRE ATT&CK Mapping",
+    "Malware Analysis Fundamentals",
+    "Phishing Investigation",
+    "SIEM & Detection Fundamentals"
+  ];
 
-  useEffect(() => {
-    if (!started) return;
-
-    let start = 0;
-    const duration = 1500;
-    const increment = value / (duration / 16);
-
-    const timer = setInterval(() => {
-      start += increment;
-
-      if (start >= value) {
-        setCount(value);
-        clearInterval(timer);
-      } else {
-        setCount(Math.floor(start));
-      }
-    }, 16);
-
-    return () => clearInterval(timer);
-  }, [started, value]);
+  const tools = [
+    "Splunk",
+    "Wireshark",
+    "Nmap",
+    "Burp Suite",
+    "Kali Linux",
+    "Nessus",
+    "Git & GitHub",
+    "VirtualBox"
+  ];
 
   return (
-    <div
-      ref={ref}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      className="relative flex flex-col items-center justify-center rounded-2xl border px-6 py-6 transition-all duration-300 cursor-default"
-      style={{
-        background: hovered
-          ? "rgba(0,255,255,0.07)"
-          : "rgba(255,255,255,0.03)",
-        borderColor: hovered
-          ? "rgba(0,255,255,0.4)"
-          : "rgba(255,255,255,0.08)",
-        transform: hovered ? "translateY(-5px)" : "translateY(0px)",
-        boxShadow: hovered
-          ? "0 0 24px rgba(0,255,255,0.15)"
-          : "none",
-      }}
-    >
-      {/* Glow dot on top */}
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full transition-all duration-300"
-        style={{
-          background: hovered ? "#000000" : "transparent",
-          boxShadow: hovered ? "0 0 8px #06b6d4" : "none",
-        }}
-      />
+    <section id="skills" className="relative py-28 bg-[#0b1320]">
 
-      {/* Number */}
-      <div
-        className="text-4xl font-black mb-1 transition-all duration-300"
-        style={{
-          color: hovered ? "#06b6d4" : "#ffffff",
-          textShadow: hovered
-            ? "0 0 20px rgba(6,182,212,0.5)"
-            : "none",
-        }}
-      >
-        {count}
-        {suffix}
-      </div>
+      <div className="container mx-auto px-6">
 
-      {/* Label */}
-      <div
-        className="text-xs font-semibold uppercase tracking-widest text-center transition-all duration-300"
-        style={{
-          color: hovered
-            ? "rgba(0,255,255,0.8)"
-            : "rgba(255,255,255,0.4)",
-        }}
-      >
-        {label}
-      </div>
-    </div>
-  );
-}
+        {/* SECTION TITLE */}
 
-export default function About() {
-  return (
-    <section
-      id="about"
-      className="relative py-24"
-      style={{ backgroundColor: "#000000" }}
-    >
-      <div className="container mx-auto px-6 lg:px-12">
-        <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-20">
+          <h2 className="text-4xl lg:text-5xl font-bold text-[#f2efe8] mb-4">
+            Skills & Tools
+          </h2>
 
-          {/* ── HEADING ── */}
-          <div className="text-center mb-12">
-            <h2 className="text-4xl lg:text-5xl font-bold text-text-primary font-poppins mb-4 tracking-tight">
-              About Me
-            </h2>
+          <p className="text-[#c7b8a6] max-w-xl mx-auto">
+            Practical cybersecurity skills and tools focused on security monitoring,
+            log analysis, threat detection and incident investigation.
+          </p>
+        </div>
 
-            <div className="relative h-px bg-gradient-to-r from-transparent via-accent-cyan to-transparent opacity-50 max-w-md mx-auto">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-cyan to-transparent blur-sm"></div>
-            </div>
-          </div>
+        {/* CARD CONTAINER */}
 
-          {/* ── ABOUT TEXT ── */}
-          <div className="bg-primary-bg/50 backdrop-blur-sm rounded-2xl p-8 lg:p-12 border border-white/8 hover:border-accent-blue/30 transition-all duration-500">
+        <div className="flex justify-center items-center">
 
-            <p className="text-text-secondary text-lg leading-relaxed">
-              I am{" "}
-              <strong className="text-white">
-                Lokesh Babu Adusumalli
-              </strong>
-              , a cybersecurity student from Bengaluru, India, currently
-              studying at Dayananda Sagar College of Engineering. I am focused
-              on developing practical skills in security monitoring, network
-              security, vulnerability assessment, log analysis, and incident
-              investigation.
-            </p>
+          <div
+            onClick={() => setOpen(true)}
+            className={`relative transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]
+            ${open ? "w-[700px] h-[352px]" : "w-[360px] h-[130px]"}`}
+          >
 
-            <p className="text-text-secondary text-lg leading-relaxed mt-6">
-              Through hands-on labs and security projects, I am building a
-              strong foundation in cybersecurity, SOC operations, threat
-              detection, and security analysis. I am particularly interested
-              in understanding how cyberattacks occur, analyzing security
-              events, and learning how security teams detect and respond to
-              threats. My goal is to begin my career as a{" "}
-              <strong className="text-white">
-                Junior Cybersecurity Analyst
-              </strong>
-              .
-            </p>
+            {/* INITIAL CARD */}
 
-          </div>
+            {!open && (
 
-          {/* ── STATS ── */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10">
-            <StatCard
-              value={projects.length}
-              label="Projects Completed"
-            />
+              <div
+                className="flex flex-col items-center justify-center h-full rounded-2xl border cursor-pointer"
+                style={{
+                  borderColor: "rgba(180,106,85,0.4)",
+                  boxShadow: "0 0 25px rgba(180,106,85,0.2)",
+                  background: "rgba(242,239,232,0.02)",
+                  transition: "all 0.5s ease"
+                }}
+              >
 
-            <StatCard
-              value={1}
-              label="CTFs Completed"
-            />
+                <h3 className="text-xl font-semibold text-[#f2efe8]">
+                  Skills & Tools
+                </h3>
 
-            <StatCard
-              value={1}
-              label="Hackathons"
-            />
+                <p className="text-[#c7b8a6] text-sm mt-2">
+                  Click to explore
+                </p>
+
+              </div>
+
+            )}
+
+            {/* SPLIT CARDS */}
+
+            {open && (
+
+              <div className="flex gap-6 h-full">
+
+                {/* SKILLS CARD */}
+
+                <div
+                  onMouseEnter={() => setHovered("skills")}
+                  onMouseLeave={() => setHovered(null)}
+                  className="flex-1 rounded-2xl border p-6 transition-all duration-500"
+                  style={{
+                    borderColor: "rgba(180,106,85,0.4)",
+                    background: "rgba(242,239,232,0.02)",
+                    transform: hovered === "skills" ? "scale(1.05)" : "scale(1)",
+                    boxShadow:
+                      hovered === "skills"
+                        ? "0 0 35px rgba(180,106,85,0.4)"
+                        : "none"
+                  }}
+                >
+
+                  <div className="flex items-center gap-3 mb-5">
+
+                    <div className="p-2 rounded-lg bg-[#b46a55] text-[#f2efe8]">
+                      <Shield className="w-5 h-5"/>
+                    </div>
+
+                    <h3 className="text-lg font-semibold text-[#b46a55]">
+                      Skills
+                    </h3>
+
+                  </div>
+
+                  <ul className="space-y-2">
+
+                    {skills.map((skill, i) => (
+
+                      <li
+                        key={i}
+                        className="flex gap-2 text-[#c7b8a6] text-sm"
+                      >
+                        <span className="text-[#b46a55]">▹</span>
+                        {skill}
+                      </li>
+
+                    ))}
+
+                  </ul>
+
+                </div>
+
+                {/* TOOLS CARD */}
+
+                <div
+                  onMouseEnter={() => setHovered("tools")}
+                  onMouseLeave={() => setHovered(null)}
+                  className="flex-1 rounded-2xl border p-6 transition-all duration-500"
+                  style={{
+                    borderColor: "rgba(180,106,85,0.4)",
+                    background: "rgba(242,239,232,0.02)",
+                    transform: hovered === "tools" ? "scale(1.05)" : "scale(1)",
+                    boxShadow:
+                      hovered === "tools"
+                        ? "0 0 35px rgba(180,106,85,0.4)"
+                        : "none"
+                  }}
+                >
+
+                  <div className="flex items-center gap-3 mb-5">
+
+                    <div className="p-2 rounded-lg bg-[#b46a55] text-[#f2efe8]">
+                      <Wrench className="w-5 h-5"/>
+                    </div>
+
+                    <h3 className="text-lg font-semibold text-[#b46a55]">
+                      Tools
+                    </h3>
+
+                  </div>
+
+                  <ul className="space-y-2">
+
+                    {tools.map((tool, i) => (
+
+                      <li
+                        key={i}
+                        className="flex gap-2 text-[#c7b8a6] text-sm"
+                      >
+                        <span className="text-[#b46a55]">▹</span>
+                        {tool}
+                      </li>
+
+                    ))}
+
+                  </ul>
+
+                </div>
+
+              </div>
+
+            )}
+
           </div>
 
         </div>
+
       </div>
+
     </section>
   );
 }
