@@ -1,199 +1,120 @@
 
-import { useState } from "react";
-import { Wrench, Shield } from "lucide-react";
+import { useEffect, useState } from "react";
+import { projects } from "./Projects";
 
-export default function Skills() {
+const stats = [
+  {
+    label: "Hackathons Participated",
+    value: 1,
+    background: "#1f2a44",
+    color: "#f2efe8",
+  },
+  {
+    label: "Projects Completed",
+    value: projects.length,
+    background: "#b46a55",
+    color: "#0b1320",
+  },
+  {
+    label: "CTFs Participated",
+    value: 1,
+    background: "#c7b8a6",
+    color: "#0b1320",
+  },
+];
 
-  const [open, setOpen] = useState(false);
-  const [hovered, setHovered] = useState<string | null>(null);
+function CountUp({ target }: { target: number }) {
+  const [count, setCount] = useState(0);
 
-  const skills = [
-    "Network Traffic Analysis",
-    "Threat Detection",
-    "Security Monitoring",
-    "Log Analysis",
-    "Incident Investigation",
-    "MITRE ATT&CK Mapping",
-    "Malware Analysis Fundamentals",
-    "Phishing Investigation",
-    "SIEM & Detection Fundamentals"
-  ];
+  useEffect(() => {
+    let currentStep = 0;
+    const totalSteps = 50;
+    const duration = 1500;
+    const intervalTime = duration / totalSteps;
 
-  const tools = [
-    "Splunk",
-    "Wireshark",
-    "Nmap",
-    "Burp Suite",
-    "Kali Linux",
-    "Nessus",
-    "Git & GitHub",
-    "VirtualBox"
-  ];
+    const timer = window.setInterval(() => {
+      currentStep++;
 
+      setCount(
+        Math.min(
+          Math.round((target * currentStep) / totalSteps),
+          target
+        )
+      );
+
+      if (currentStep >= totalSteps) {
+        window.clearInterval(timer);
+      }
+    }, intervalTime);
+
+    return () => window.clearInterval(timer);
+  }, [target]);
+
+  return <>{count}</>;
+}
+
+export default function About() {
   return (
-    <section id="skills" className="relative py-28 bg-[#0b1320]">
-
-      <div className="container mx-auto px-6">
-
-        {/* SECTION TITLE */}
-
-        <div className="text-center mb-20">
-          <h2 className="text-4xl lg:text-5xl font-bold text-[#f2efe8] mb-4">
-            Skills & Tools
+    <section
+      id="about"
+      className="w-full px-6 py-20"
+      style={{ backgroundColor: "#0b1320" }}
+    >
+      <div className="mx-auto max-w-6xl">
+        {/* About card */}
+        <div
+          className="rounded-2xl p-8 md:p-12"
+          style={{
+            backgroundColor: "#f2efe8",
+            color: "#0b1320",
+          }}
+        >
+          <h2 className="mb-6 text-3xl font-bold md:text-4xl">
+            About Me
           </h2>
 
-          <p className="text-[#c7b8a6] max-w-xl mx-auto">
-            Practical cybersecurity skills and tools focused on security monitoring,
-            log analysis, threat detection and incident investigation.
-          </p>
-        </div>
-
-        {/* CARD CONTAINER */}
-
-        <div className="flex justify-center items-center">
-
-          <div
-            onClick={() => setOpen(true)}
-            className={`relative transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]
-            ${open ? "w-[700px] h-[352px]" : "w-[360px] h-[130px]"}`}
-          >
-
-            {/* INITIAL CARD */}
-
-            {!open && (
-
-              <div
-                className="flex flex-col items-center justify-center h-full rounded-2xl border cursor-pointer"
-                style={{
-                  borderColor: "rgba(180,106,85,0.4)",
-                  boxShadow: "0 0 25px rgba(180,106,85,0.2)",
-                  background: "rgba(242,239,232,0.02)",
-                  transition: "all 0.5s ease"
-                }}
-              >
-
-                <h3 className="text-xl font-semibold text-[#f2efe8]">
-                  Skills & Tools
-                </h3>
-
-                <p className="text-[#c7b8a6] text-sm mt-2">
-                  Click to explore
-                </p>
-
-              </div>
-
-            )}
-
-            {/* SPLIT CARDS */}
-
-            {open && (
-
-              <div className="flex gap-6 h-full">
-
-                {/* SKILLS CARD */}
-
-                <div
-                  onMouseEnter={() => setHovered("skills")}
-                  onMouseLeave={() => setHovered(null)}
-                  className="flex-1 rounded-2xl border p-6 transition-all duration-500"
-                  style={{
-                    borderColor: "rgba(180,106,85,0.4)",
-                    background: "rgba(242,239,232,0.02)",
-                    transform: hovered === "skills" ? "scale(1.05)" : "scale(1)",
-                    boxShadow:
-                      hovered === "skills"
-                        ? "0 0 35px rgba(180,106,85,0.4)"
-                        : "none"
-                  }}
-                >
-
-                  <div className="flex items-center gap-3 mb-5">
-
-                    <div className="p-2 rounded-lg bg-[#b46a55] text-[#f2efe8]">
-                      <Shield className="w-5 h-5"/>
-                    </div>
-
-                    <h3 className="text-lg font-semibold text-[#b46a55]">
-                      Skills
-                    </h3>
-
-                  </div>
-
-                  <ul className="space-y-2">
-
-                    {skills.map((skill, i) => (
-
-                      <li
-                        key={i}
-                        className="flex gap-2 text-[#c7b8a6] text-sm"
-                      >
-                        <span className="text-[#b46a55]">▹</span>
-                        {skill}
-                      </li>
-
-                    ))}
-
-                  </ul>
-
-                </div>
-
-                {/* TOOLS CARD */}
-
-                <div
-                  onMouseEnter={() => setHovered("tools")}
-                  onMouseLeave={() => setHovered(null)}
-                  className="flex-1 rounded-2xl border p-6 transition-all duration-500"
-                  style={{
-                    borderColor: "rgba(180,106,85,0.4)",
-                    background: "rgba(242,239,232,0.02)",
-                    transform: hovered === "tools" ? "scale(1.05)" : "scale(1)",
-                    boxShadow:
-                      hovered === "tools"
-                        ? "0 0 35px rgba(180,106,85,0.4)"
-                        : "none"
-                  }}
-                >
-
-                  <div className="flex items-center gap-3 mb-5">
-
-                    <div className="p-2 rounded-lg bg-[#b46a55] text-[#f2efe8]">
-                      <Wrench className="w-5 h-5"/>
-                    </div>
-
-                    <h3 className="text-lg font-semibold text-[#b46a55]">
-                      Tools
-                    </h3>
-
-                  </div>
-
-                  <ul className="space-y-2">
-
-                    {tools.map((tool, i) => (
-
-                      <li
-                        key={i}
-                        className="flex gap-2 text-[#c7b8a6] text-sm"
-                      >
-                        <span className="text-[#b46a55]">▹</span>
-                        {tool}
-                      </li>
-
-                    ))}
-
-                  </ul>
-
-                </div>
-
-              </div>
-
-            )}
-
-          </div>
+          {/* Description with approximately 30% larger font */}
+          
+<div className="space-y-4 text-base leading-7 md:text-lg md:leading-8">
+  <p>
+    I am a dedicated <strong>Cybersecurity Student</strong> actively
+    working on the path to become a SOC Analyst. While I am at the
+    beginning of my professional journey, I am fully invested in
+    building the practical skills needed for the role. My daily focus
+    is on mastering the fundamentals of networking, operating systems,
+    and threat detection. Through hands-on home labs and self-study,
+    I am training myself to analyze logs, monitor traffic, and
+    understand how to spot cyber threats. I am highly motivated,
+    eager to learn, and looking for an opportunity to kickstart my
+    career on the front lines of digital defense.
+  </p>
+</div>
 
         </div>
 
+        {/* Stats below the About card */}
+        <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {stats.map((stat) => (
+            <div
+              key={stat.label}
+              className="rounded-2xl p-7 text-center transition-transform duration-300 hover:-translate-y-1"
+              style={{
+                backgroundColor: stat.background,
+                color: stat.color,
+                boxShadow: "0 8px 24px rgba(0, 0, 0, 0.18)",
+              }}
+            >
+              <div className="mb-3 text-4xl font-bold md:text-5xl">
+                <CountUp target={stat.value} />
+              </div>
+
+              <p className="text-sm font-semibold md:text-base">
+                {stat.label}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
-
     </section>
   );
 }

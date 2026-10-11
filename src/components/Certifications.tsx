@@ -4,25 +4,19 @@ import { Lock, ShieldCheck, Terminal } from 'lucide-react';
 
 const certs = [
   {
-    step: 'Step 01',
     title: 'CompTIA Security+',
     issuer: 'CompTIA',
     icon: <Lock className="w-5 h-5" />,
-    status: 'Planned',
   },
   {
-    step: 'Step 02',
     title: 'Microsoft SC-200',
     issuer: 'Microsoft',
     icon: <ShieldCheck className="w-5 h-5" />,
-    status: 'Planned',
   },
   {
-    step: 'Step 03',
     title: 'BTL1',
     issuer: 'Security Blue Team',
     icon: <Terminal className="w-5 h-5" />,
-    status: 'Planned',
   },
 ];
 
@@ -31,6 +25,7 @@ export default function Certifications() {
   const [visibleItems, setVisibleItems] = useState<boolean[]>(
     new Array(certs.length).fill(false)
   );
+
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
@@ -44,9 +39,9 @@ export default function Certifications() {
           if (entry.isIntersecting) {
             setTimeout(() => {
               setVisibleItems((prev) => {
-                const n = [...prev];
-                n[i] = true;
-                return n;
+                const next = [...prev];
+                next[i] = true;
+                return next;
               });
             }, i * 100);
 
@@ -60,65 +55,48 @@ export default function Certifications() {
       observers.push(obs);
     });
 
-    return () => observers.forEach((o) => o.disconnect());
+    return () => observers.forEach((observer) => observer.disconnect());
   }, []);
 
   return (
     <>
       <style>{`
-        .cert-card {
-          transition:
-            opacity 0.4s ease,
-            transform 0.5s cubic-bezier(0.22,1,0.36,1),
-            box-shadow 0.3s ease,
-            border-color 0.3s ease,
-            background-color 0.3s ease;
-        }
+        
+.cert-card {
+  transition:
+    opacity 0.4s ease,
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s ease,
+    border-color 0.3s ease,
+    background-color 0.3s ease;
+}
 
-        .cert-card.hidden-card {
-          opacity: 0;
-          transform: translateY(32px);
-        }
+.cert-card.visible-card {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
 
-        .cert-card.visible-card {
-          opacity: 1;
-          transform: translateY(0);
-        }
+.cert-card.visible-card:hover {
+  transform: translateY(-4px) scale(1.05);
+  z-index: 2;
+}
 
-        /* Softer dimming of surrounding cards */
-        .cert-card.dimmed-card {
-          opacity: 0.65;
-        }
+.cert-card.hidden-card {
+  opacity: 0;
+  transform: translateY(32px) scale(0.96);
+}
 
-        .cert-icon {
-          transition:
-            background-color 0.3s ease,
-            color 0.3s ease;
-        }
+.cert-card.dimmed-card {
+  opacity: 0.55;
+}
 
-        .cert-status-dot {
-          transition:
-            background-color 0.3s ease,
-            box-shadow 0.3s ease;
-        }
+@media (prefers-reduced-motion: reduce) {
+  .cert-card,
+  .cert-icon {
+    transition: none !important;
+  }
+}
 
-        .cert-status-text {
-          transition: color 0.3s ease;
-        }
-
-        @keyframes blink {
-          0%,100% {
-            opacity: 1;
-          }
-
-          50% {
-            opacity: 0.25;
-          }
-        }
-
-        .pulsing {
-          animation: blink 1.6s ease-in-out infinite;
-        }
       `}</style>
 
       <section
@@ -130,18 +108,6 @@ export default function Certifications() {
           overflow: 'hidden',
         }}
       >
-        {/* Dot-grid background */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            pointerEvents: 'none',
-            backgroundImage:
-              'radial-gradient(circle, rgba(180,106,85,0.08) 1px, transparent 1px)',
-            backgroundSize: '40px 40px',
-          }}
-        />
-
         <div
           style={{
             maxWidth: '1100px',
@@ -151,99 +117,89 @@ export default function Certifications() {
             zIndex: 1,
           }}
         >
-          {/* Header */}
-          <div
-            style={{
-              textAlign: 'center',
-              marginBottom: '64px',
-            }}
-          >
-            <h2
-              style={{
-                fontFamily: "'Poppins', sans-serif",
-                fontSize: 'clamp(2rem, 5vw, 3rem)',
-                fontWeight: 800,
-                color: '#f2efe8',
-                letterSpacing: '-0.5px',
-                marginBottom: '12px',
-              }}
-            >
-              Certifications
-            </h2>
+          
+{/* Header */}
+<div
+  style={{
+    textAlign: 'center',
+    marginBottom: '64px',
+  }}
+>
+  <h2
+    style={{
+      fontFamily: "'Poppins', sans-serif",
+      fontSize: 'clamp(2rem, 5vw, 3rem)',
+      fontWeight: 800,
+      color: '#f2efe8',
+      letterSpacing: '-0.5px',
+      marginBottom: '16px',
+    }}
+  >
+    Certifications
+  </h2>
 
-            <p
-              style={{
-                fontFamily: "'Inter', sans-serif",
-                fontSize: '15px',
-                color: 'rgba(199,184,166,0.7)',
-                maxWidth: '420px',
-                margin: '0 auto',
-                lineHeight: 1.7,
-              }}
-            >
-              My SOC certification roadmap — ordered by learning path
-            </p>
-          </div>
+  <p
+    style={{
+      fontFamily: "'Inter', sans-serif",
+      fontSize: 'clamp(0.95rem, 2vw, 1.1rem)',
+      lineHeight: 1.8,
+      color: '#c7b8a6',
+      maxWidth: '680px',
+      margin: '0 auto',
+      padding: '0 8px',
+    }}
+  >
+    Building a strong foundation in cybersecurity through continuous learning,
+    hands-on practice, and industry-recognized certifications in security
+    operations, threat detection, and defense.
+  </p>
+</div>
 
-          {/* Grid */}
+          {/* Certification cards */}
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns:
-                'repeat(auto-fit, minmax(280px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
               gap: '16px',
             }}
           >
             {certs.map((cert, i) => {
               const isHovered = hoveredIndex === i;
-              const isDimmed =
-                hoveredIndex !== null && !isHovered;
+              const isDimmed = hoveredIndex !== null && !isHovered;
               const isVisible = visibleItems[i];
-              const isInProgress = cert.status === 'In Progress';
-              const isPlanned = cert.status === 'Planned';
-
-              const dotActive =
-                isInProgress || (isPlanned && isHovered);
 
               return (
                 <div
-                  key={i}
+                  key={cert.title}
                   ref={(el) => {
                     itemRefs.current[i] = el;
                   }}
                   className={`cert-card ${
-                    isVisible
-                      ? 'visible-card'
-                      : 'hidden-card'
+                    isVisible ? 'visible-card' : 'hidden-card'
                   } ${isDimmed ? 'dimmed-card' : ''}`}
                   onMouseEnter={() => setHoveredIndex(i)}
                   onMouseLeave={() => setHoveredIndex(null)}
+                  onFocus={() => setHoveredIndex(i)}
+                  onBlur={() => setHoveredIndex(null)}
                   style={{
-                    borderRadius: '14px',
-                    padding: '20px 22px',
-
-                    /* Softer hover border */
+                    borderRadius: '18px',
+                    padding: '24px 22px',
                     border: `1px solid ${
                       isHovered
-                        ? 'rgba(180,106,85,0.38)'
-                        : 'rgba(199,184,166,0.07)'
+                        ? '#b46a55'
+                        : 'rgba(180,106,85,0.3)'
                     }`,
-
-                    /* Softer hover background */
                     backgroundColor: isHovered
-                      ? 'rgba(180,106,85,0.035)'
-                      : 'rgba(242,239,232,0.025)',
-
-                    /* Softer hover glow */
+                      ? '#f2efe8'
+                      : 'rgba(242,239,232,0.97)',
                     boxShadow: isHovered
-                      ? '0 0 20px 2px rgba(180,106,85,0.10), 0 0 38px 4px rgba(180,106,85,0.035)'
-                      : 'none',
-
-                    backdropFilter: 'blur(8px)',
+                      ? '0 16px 36px rgba(180,106,85,0.18)'
+                      : '0 6px 20px rgba(0,0,0,0.16)',
                     cursor: 'default',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '16px',
+                    minWidth: 0,
                   }}
                 >
                   {/* Icon */}
@@ -251,57 +207,37 @@ export default function Certifications() {
                     className="cert-icon"
                     style={{
                       flexShrink: 0,
-                      padding: '10px',
-                      borderRadius: '10px',
-
-                      /* Softer icon highlight */
+                      padding: '12px',
+                      borderRadius: '12px',
                       backgroundColor: isHovered
-                        ? 'rgba(180,106,85,0.75)'
-                        : 'rgba(180,106,85,0.1)',
-
-                      color: isHovered
-                        ? '#0b1320'
-                        : '#b46a55',
-
+                        ? '#1f2a44'
+                        : '#c7b8a6',
+                      color: isHovered ? '#f2efe8' : '#0b1320',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
+                      transform: isHovered ? 'scale(1.06)' : 'scale(1)',
                     }}
                   >
                     {cert.icon}
                   </div>
 
-                  {/* Text */}
+                  {/* Certification details */}
                   <div
                     style={{
                       flex: 1,
                       minWidth: 0,
                     }}
                   >
-                    <p
-                      style={{
-                        fontFamily: "'Inter', monospace",
-                        fontSize: '9px',
-                        letterSpacing: '3px',
-                        textTransform: 'uppercase',
-                        color: 'rgba(180,106,85,0.8)',
-                        marginBottom: '4px',
-                      }}
-                    >
-                      {cert.step}
-                    </p>
-
                     <h3
                       style={{
                         fontFamily: "'Poppins', sans-serif",
-                        fontSize: '0.92rem',
+                        fontSize: '1.045rem',
                         fontWeight: 700,
-                        color: '#f2efe8',
-                        lineHeight: 1.3,
-                        marginBottom: '3px',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
+                        color: '#0b1320',
+                        lineHeight: 1.4,
+                        marginBottom: '4px',
+                        overflowWrap: 'anywhere',
                       }}
                     >
                       {cert.title}
@@ -310,79 +246,18 @@ export default function Certifications() {
                     <p
                       style={{
                         fontFamily: "'Inter', sans-serif",
-                        fontSize: '11px',
-                        color: 'rgba(199,184,166,0.6)',
-                        letterSpacing: '0.5px',
+                        fontSize: '13.2px',
+                        color: '#1f2a44',
+                        opacity: 0.85,
+                        letterSpacing: '0.2px',
                       }}
                     >
                       {cert.issuer}
                     </p>
                   </div>
-
-                  {/* Status */}
-                  <div
-                    style={{
-                      flexShrink: 0,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: '5px',
-                    }}
-                  >
-                    <span
-                      className={`cert-status-dot ${
-                        isInProgress ? 'pulsing' : ''
-                      }`}
-                      style={{
-                        width: 7,
-                        height: 7,
-                        borderRadius: '50%',
-                        display: 'inline-block',
-                        backgroundColor: dotActive
-                          ? '#b46a55'
-                          : 'rgba(199,184,166,0.2)',
-                        boxShadow: dotActive
-                          ? '0 0 7px #b46a55'
-                          : 'none',
-                      }}
-                    />
-
-                    <span
-                      className="cert-status-text"
-                      style={{
-                        fontFamily: "'Inter', sans-serif",
-                        fontSize: '8px',
-                        letterSpacing: '1.5px',
-                        textTransform: 'uppercase',
-                        color: dotActive
-                          ? 'rgba(180,106,85,0.9)'
-                          : 'rgba(199,184,166,0.35)',
-                        writingMode: 'vertical-rl',
-                        textOrientation: 'mixed',
-                      }}
-                    >
-                      {cert.status}
-                    </span>
-                  </div>
                 </div>
               );
             })}
-          </div>
-
-          {/* Bottom label */}
-          <div
-            style={{
-              textAlign: 'center',
-              marginTop: '48px',
-              fontFamily: "'Inter', monospace",
-              fontSize: '10px',
-              letterSpacing: '3px',
-              color: '#c7b8a6',
-              opacity: 0.35,
-              textTransform: 'uppercase',
-            }}
-          >
-            the roadmap continues
           </div>
         </div>
       </section>
