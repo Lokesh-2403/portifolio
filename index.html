@@ -1,8 +1,10 @@
-
+```html
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <meta
       name="google-site-verification"
@@ -11,7 +13,7 @@
 
     <!-- Primary SEO -->
     <title>
-      Lokesh Babu Adusumalli | Cybersecurity Student & Aspiring Junior Cybersecurity Analyst
+      Lokesh Babu Adusumalli | Cybersecurity Student &amp; Aspiring Junior Cybersecurity Analyst
     </title>
 
     <meta
@@ -48,7 +50,7 @@
 
     <meta
       property="og:title"
-      content="Lokesh Babu Adusumalli | Cybersecurity Student & Aspiring Junior Cybersecurity Analyst"
+      content="Lokesh Babu Adusumalli | Cybersecurity Student &amp; Aspiring Junior Cybersecurity Analyst"
     />
 
     <meta
@@ -84,7 +86,7 @@
 
     <meta
       name="twitter:title"
-      content="Lokesh Babu Adusumalli | Cybersecurity Student & Aspiring Junior Cybersecurity Analyst"
+      content="Lokesh Babu Adusumalli | Cybersecurity Student &amp; Aspiring Junior Cybersecurity Analyst"
     />
 
     <meta
@@ -163,357 +165,27 @@
       }
     </script>
 
+    <!-- Base document styles only; portfolio styling remains in the app -->
     <style>
       html,
       body {
         margin: 0;
         padding: 0;
+        min-height: 100%;
         background: #0b1320;
       }
 
       #root {
         min-height: 100vh;
       }
-
-      /* =========================================
-         CYBERSECURITY INITIAL LOADER
-         MIDNIGHT LINEN PALETTE
-         ========================================= */
-
-      #initial-loader {
-        position: fixed;
-        inset: 0;
-        z-index: 99999;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        background:
-          radial-gradient(
-            circle at center,
-            rgba(180, 106, 85, 0.08),
-            transparent 42%
-          ),
-          #0b1320;
-        color: #f2efe8;
-        font-family: Arial, Helvetica, sans-serif;
-        transition: opacity 0.5s ease;
-      }
-
-      /* Cyber grid */
-      #initial-loader::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background-image:
-          linear-gradient(
-            rgba(199, 184, 166, 0.035) 1px,
-            transparent 1px
-          ),
-          linear-gradient(
-            90deg,
-            rgba(199, 184, 166, 0.035) 1px,
-            transparent 1px
-          );
-        background-size: 45px 45px;
-        pointer-events: none;
-      }
-
-      /* Moving scan line */
-      #initial-loader::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: -10%;
-        height: 1px;
-        background: rgba(180, 106, 85, 0.3);
-        box-shadow: 0 0 18px rgba(180, 106, 85, 0.35);
-        animation: scan-line 3s linear infinite;
-        pointer-events: none;
-      }
-
-      .loader-content {
-        position: relative;
-        z-index: 2;
-        width: min(90%, 520px);
-        text-align: center;
-      }
-
-      /* Name */
-      .loader-name {
-        color: #f2efe8;
-        font-size: 30px;
-        font-weight: 700;
-        letter-spacing: 6px;
-        margin-bottom: 10px;
-        text-shadow: 0 0 10px rgba(242, 239, 232, 0.15);
-      }
-
-      /* Subtitle */
-      .loader-subtitle {
-        color: #b46a55;
-        font-size: 13px;
-        font-weight: 600;
-        letter-spacing: 3px;
-        margin-bottom: 38px;
-        text-shadow: 0 0 8px rgba(180, 106, 85, 0.35);
-      }
-
-      /* Security emblem */
-      .loader-emblem {
-        width: 54px;
-        height: 54px;
-        margin: 0 auto 30px;
-        border: 1px solid rgba(180, 106, 85, 0.7);
-        position: relative;
-        transform: rotate(45deg);
-        box-shadow: 0 0 15px rgba(180, 106, 85, 0.12);
-        animation: emblem-pulse 2s ease-in-out infinite;
-      }
-
-      .loader-emblem::before {
-        content: "";
-        position: absolute;
-        inset: 9px;
-        border: 1px solid rgba(199, 184, 166, 0.7);
-      }
-
-      .loader-emblem::after {
-        content: "";
-        position: absolute;
-        inset: 19px;
-        background: #b46a55;
-        box-shadow: 0 0 12px rgba(180, 106, 85, 0.8);
-      }
-
-      /* Terminal section */
-      .loader-terminal {
-        width: min(100%, 390px);
-        margin: 0 auto 28px;
-        text-align: left;
-        font-family: "Courier New", monospace;
-        font-size: 12px;
-        line-height: 2;
-      }
-
-      .terminal-line {
-        display: flex;
-        justify-content: space-between;
-        gap: 20px;
-        color: rgba(199, 184, 166, 0.85);
-      }
-
-      .terminal-prefix {
-        color: #b46a55;
-      }
-
-      .terminal-status {
-        color: #c7b8a6;
-        font-weight: 700;
-        text-shadow: 0 0 7px rgba(199, 184, 166, 0.35);
-      }
-
-      /* Progress heading */
-      .loader-progress-label {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: min(100%, 390px);
-        margin: 0 auto 8px;
-        color: rgba(199, 184, 166, 0.7);
-        font-family: "Courier New", monospace;
-        font-size: 10px;
-        letter-spacing: 1.5px;
-      }
-
-      .loader-progress-label span:last-child {
-        color: #b46a55;
-      }
-
-      /* Progress bar */
-      .loader-bar {
-        width: min(100%, 390px);
-        height: 3px;
-        margin: 0 auto;
-        background: rgba(199, 184, 166, 0.12);
-        overflow: hidden;
-        border-radius: 2px;
-      }
-
-      .loader-progress {
-        width: 0%;
-        height: 100%;
-        background: #b46a55;
-        box-shadow: 0 0 10px rgba(180, 106, 85, 0.7);
-        animation: loader-progress 2s ease-out forwards;
-      }
-
-      /* Footer */
-      .loader-footer {
-        width: min(100%, 390px);
-        margin: 18px auto 0;
-        display: flex;
-        justify-content: space-between;
-        color: rgba(199, 184, 166, 0.45);
-        font-family: "Courier New", monospace;
-        font-size: 9px;
-        letter-spacing: 1.5px;
-      }
-
-      .loader-footer .online {
-        color: #c7b8a6;
-        text-shadow: 0 0 7px rgba(199, 184, 166, 0.35);
-      }
-
-      /* =========================================
-         ANIMATIONS
-         ========================================= */
-
-      @keyframes scan-line {
-        0% {
-          transform: translateY(0);
-        }
-
-        100% {
-          transform: translateY(120vh);
-        }
-      }
-
-      @keyframes emblem-pulse {
-        0%,
-        100% {
-          opacity: 0.65;
-          box-shadow: 0 0 12px rgba(180, 106, 85, 0.08);
-        }
-
-        50% {
-          opacity: 1;
-          box-shadow: 0 0 22px rgba(180, 106, 85, 0.2);
-        }
-      }
-
-      @keyframes loader-progress {
-        0% {
-          width: 0%;
-        }
-
-        100% {
-          width: 100%;
-        }
-      }
-
-      /* =========================================
-         MOBILE
-         ========================================= */
-
-      @media (max-width: 600px) {
-        .loader-name {
-          font-size: 23px;
-          letter-spacing: 4px;
-        }
-
-        .loader-subtitle {
-          font-size: 10px;
-          letter-spacing: 2px;
-        }
-
-        .loader-terminal {
-          font-size: 10px;
-        }
-
-        .loader-progress-label,
-        .loader-footer {
-          font-size: 8px;
-        }
-      }
     </style>
   </head>
 
   <body>
-    <!-- Initial loading screen -->
-    <div id="initial-loader">
-      <div class="loader-content">
-
-        <!-- Security emblem -->
-        <div class="loader-emblem"></div>
-
-        <!-- Name -->
-        <div class="loader-name">
-          LOKESH BABU
-        </div>
-
-        <!-- Subtitle -->
-        <div class="loader-subtitle">
-          CYBERSECURITY · ASPIRING JUNIOR CYBERSECURITY ANALYST
-        </div>
-
-        <!-- Terminal -->
-        <div class="loader-terminal">
-          <div class="terminal-line">
-            <span>
-              <span class="terminal-prefix">&gt;</span>
-              Initializing security environment
-            </span>
-            <span class="terminal-status">OK</span>
-          </div>
-
-          <div class="terminal-line">
-            <span>
-              <span class="terminal-prefix">&gt;</span>
-              Loading SOC modules
-            </span>
-            <span class="terminal-status">OK</span>
-          </div>
-
-          <div class="terminal-line">
-            <span>
-              <span class="terminal-prefix">&gt;</span>
-              Establishing secure session
-            </span>
-            <span class="terminal-status">OK</span>
-          </div>
-        </div>
-
-        <!-- Progress -->
-        <div class="loader-progress-label">
-          <span>SYSTEM INITIALIZATION</span>
-          <span>100%</span>
-        </div>
-
-        <div class="loader-bar">
-          <div class="loader-progress"></div>
-        </div>
-
-        <!-- Footer -->
-        <div class="loader-footer">
-          <span>SECURE SESSION</span>
-          <span class="online">● SYSTEM ONLINE</span>
-        </div>
-
-      </div>
-    </div>
-
     <!-- React application -->
     <div id="root"></div>
 
-    <script>
-      window.addEventListener("load", function () {
-        const loader = document.getElementById("initial-loader");
-
-        if (loader) {
-          setTimeout(function () {
-            loader.style.opacity = "0";
-
-            setTimeout(function () {
-              loader.remove();
-            }, 500);
-          }, 2000);
-        }
-      });
-    </script>
-
-    <!-- React -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
+```

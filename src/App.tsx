@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import Hero from "./components/Hero";
 import About from "./components/About";
@@ -13,6 +13,7 @@ import CyberCursor from "./components/CyberCursor";
 import HostBasedProject from "./pages/HostBasedProject";
 import WindowsEventLogProject from "./pages/WindowsEventLogProject";
 import AIChat from "./components/AIChat";
+import LoadingScreen from "./components/LoadingScreen";
 
 type ActivePage = "home" | "host" | "windows";
 
@@ -20,8 +21,14 @@ function App() {
   const [activePage, setActivePage] = useState<ActivePage>("home");
   const [selectedProjectIndex, setSelectedProjectIndex] = useState(0);
   const [returnToProjects, setReturnToProjects] = useState(false);
+  const [showLoadingScreen, setShowLoadingScreen] = useState(true);
+
+  const finishLoading = useCallback(() => {
+    setShowLoadingScreen(false);
+  }, []);
 
   useEffect(() => {
+    if (showLoadingScreen) return;
     if (activePage !== "home" || !returnToProjects) return;
 
     const frame = window.requestAnimationFrame(() => {
@@ -34,7 +41,7 @@ function App() {
     });
 
     return () => window.cancelAnimationFrame(frame);
-  }, [activePage, returnToProjects]);
+  }, [activePage, returnToProjects, showLoadingScreen]);
 
   const openProject = (page: "host" | "windows", index: number) => {
     setSelectedProjectIndex(index);
@@ -47,11 +54,14 @@ function App() {
     setActivePage("home");
   };
 
+  // Render only the loader until it signals completion.
+  // This prevents the portfolio from flashing during startup.
+  if (showLoadingScreen) {
+    return <LoadingScreen onComplete={finishLoading} />;
+  }
+
   return (
-    <div
-      className="relative min-h-screen bg-secondary-bg font-inter"
-      style={{ animation: "portfolioFadeIn 0.8s ease forwards" }}
-    >
+    <div className="relative min-h-screen bg-secondary-bg font-inter">
       <CyberCursor />
 
       <div
@@ -59,7 +69,10 @@ function App() {
         style={{ backgroundColor: "rgba(11, 19, 32, 0.4)" }}
       />
 
-      <div className="relative z-10">
+      <div
+        className="relative z-10"
+        style={{ animation: "portfolioFadeIn 0.3s ease both" }}
+      >
         {activePage === "home" && (
           <>
             <Hero />
