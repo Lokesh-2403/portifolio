@@ -1,20 +1,17 @@
-export default async function handler(req, res) {
 
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ reply: "Method not allowed" });
   }
 
   try {
+    const { message } = req.body ?? {};
 
-    const { message } = req.body;
-
-    if (!message || typeof message !== "string") {
-      return res.status(400).json({ reply: "Invalid input." });
+    if (typeof message !== "string" || !message.trim()) {
+      return res.status(400).json({ reply: "Please enter a message." });
     }
 
     const msg = message.toLowerCase();
-
-    /* FORCE PROJECT LIST */
 
     if (msg.includes("project")) {
       return res.status(200).json({
@@ -24,54 +21,43 @@ export default async function handler(req, res) {
       });
     }
 
-    /* FORCE SKILLS LIST */
-
-    if (msg.includes("skill")) {
+    if (msg.includes("skill") || msg.includes("technology")) {
       return res.status(200).json({
         reply: `• Network Traffic Analysis
 • SIEM Monitoring
 • Log Analysis
 • Incident Detection & Response
 • Threat Intelligence
-• Packet Analysis (Wireshark)
-• Linux Security
-• Windows Security
+• Wireshark
+• Linux & Windows Security
 • Vulnerability Assessment`
       });
     }
 
-    const systemPrompt = `
+    const apiKey = process.env.OPENROUTER_API_KEY;
 
-You are an AI assistant for Lokesh Adusumalli's cybersecurity portfolio.
+    if (!apiKey) {
+      console.error("OPENROUTER_API_KEY is missing.");
+      return res.status(500).json({
+        reply: "AI configuration is missing. Please try again later."
+      });
+    }
 
-Rules:
-- Keep answers SHORT
-- Maximum 5 lines
-- No long paragraphs
-
-About Lokesh:
-
-Lokesh Adusumalli is a cybersecurity enthusiast focused on SOC operations,
+    const systemPrompt = `You are the AI assistant for Lokesh Adusumalli's cybersecurity portfolio.
+Keep answers short, with a maximum of 5 lines.
+Lokesh is a cybersecurity enthusiast focused on SOC operations,
 threat detection, and network security monitoring.
-
-If asked "Who is Lokesh":
-
-Lokesh Adusumalli
-Cybersecurity Enthusiast
-Focused on SOC Analysis, Threat Detection & Network Security.
-
-If asked about contact:
-
-You can contact Lokesh through the contact section of this portfolio.
-
-`;
+If asked who Lokesh is, describe him as a Cybersecurity Enthusiast
+focused on SOC Analysis, Threat Detection, and Network Security.
+For contact questions, direct visitors to the portfolio contact section.
+Only state facts provided here; do not invent qualifications or experience.`;
 
     const response = await fetch(
       "https://openrouter.ai/api/v1/chat/completions",
       {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          Authorization: `Bearer ${apiKey}`,
           "Content-Type": "application/json",
           "HTTP-Referer": "https://lokeshbabu.vercel.app",
           "X-Title": "Lokesh Cyber Portfolio"
@@ -79,14 +65,8 @@ You can contact Lokesh through the contact section of this portfolio.
         body: JSON.stringify({
           model: "meta-llama/llama-3-8b-instruct",
           messages: [
-            {
-              role: "system",
-              content: systemPrompt
-            },
-            {
-              role: "user",
-              content: message
-            }
+            { role: "system", content: systemPrompt },
+            { role: "user", content: message.trim() }
           ]
         })
       }
@@ -94,20 +74,27 @@ You can contact Lokesh through the contact section of this portfolio.
 
     const data = await response.json();
 
-    const reply =
-      data?.choices?.[0]?.message?.content ||
-      "AI response unavailable.";
+    if (!response.ok) {
+      console.error("OpenRouter API error:", response.status, data);
+      return res.status(502).json({
+        reply: "The AI service returned an error. Please try again shortly."
+      });
+    }
 
-    return res.status(200).json({ reply });
+    const reply = data?.choices?.[0]?.message?.content;
 
+    if (typeof reply !== "string" || !reply.trim()) {
+      console.error("OpenRouter returned no usable reply:", data);
+      return res.status(502).json({
+        reply: "The AI service returned an empty response. Please try again."
+      });
+    }
+
+    return res.status(200).json({ reply: reply.trim() });
   } catch (error) {
-
-    console.error("AI ERROR:", error);
-
+    console.error("AI handler error:", error);
     return res.status(500).json({
-      reply: "⚠️ AI assistant unavailable."
+      reply: "The AI assistant is temporarily unavailable."
     });
-
   }
-
 }
