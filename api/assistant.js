@@ -63,7 +63,7 @@ Only state facts provided here; do not invent qualifications or experience.`;
           "X-Title": "Lokesh Cyber Portfolio"
         },
         body: JSON.stringify({
-          model: "meta-llama/llama-3-8b-instruct",
+          model: "openrouter/free",
           messages: [
             { role: "system", content: systemPrompt },
             { role: "user", content: message.trim() }
