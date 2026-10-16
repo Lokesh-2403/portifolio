@@ -1,4 +1,3 @@
-
 import { Shield, FolderOpen, FileText } from "lucide-react";
 import profile from "../assets/profile.jpg.png";
 
@@ -27,6 +26,7 @@ export default function Hero() {
           <svg
             className="absolute inset-0 w-full h-full animate-rotate-slow"
             viewBox="0 0 200 200"
+            aria-hidden="true"
           >
             <defs>
               <linearGradient
@@ -89,6 +89,7 @@ export default function Hero() {
                 </p>
 
                 <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-6">
+                  {/* View Projects */}
                   <a
                     href="#projects"
                     className="flex items-center gap-2 px-6 py-3 bg-[#b46a55] text-white font-semibold rounded-lg hover:bg-[#c17a64] hover:-translate-y-1 transition duration-300 shadow-lg shadow-[#b46a55]/20"
@@ -97,12 +98,16 @@ export default function Hero() {
                     View Projects
                   </a>
 
+                  {/* Open Resume PDF */}
                   <a
-                    href="#resume"
+                    href="/resume.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="View resume PDF in a new tab"
                     className="flex items-center gap-2 px-6 py-3 border border-[#c7b8a6]/60 text-[#f2efe8] font-semibold rounded-lg hover:bg-[#1f2a44] hover:border-[#b46a55] hover:text-[#c7b8a6] transition duration-300"
                   >
                     <FileText size={18} />
-                    Resume
+                    View Resume
                   </a>
                 </div>
               </div>
