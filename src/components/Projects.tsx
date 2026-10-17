@@ -1,6 +1,11 @@
 
 import { useEffect, useRef, useState } from "react";
-import { ExternalLink, ChevronLeft, ChevronRight, Github } from "lucide-react";
+import {
+  ExternalLink,
+  ChevronLeft,
+  ChevronRight,
+  Github,
+} from "lucide-react";
 
 export interface Project {
   title: string;
@@ -58,6 +63,11 @@ interface ProjectsProps {
   initialActiveIndex?: number;
 }
 
+interface CursorPosition {
+  x: number;
+  y: number;
+}
+
 export default function Projects({
   onViewHostProject,
   onViewWindowsProject,
@@ -65,6 +75,10 @@ export default function Projects({
 }: ProjectsProps) {
   const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
   const [viewportWidth, setViewportWidth] = useState(0);
+  const [cursorGlow, setCursorGlow] = useState<
+    Record<string, CursorPosition>
+  >({});
+
   const viewportRef = useRef<HTMLDivElement>(null);
 
   const total = projects.length;
@@ -98,6 +112,29 @@ export default function Projects({
 
   const previousProject = () => {
     setActiveIndex((current) => (current - 1 + total) % total);
+  };
+
+  const handleCardMouseMove = (
+    event: React.MouseEvent<HTMLElement>,
+    title: string
+  ) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+
+    setCursorGlow((current) => ({
+      ...current,
+      [title]: {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top,
+      },
+    }));
+  };
+
+  const handleCardMouseLeave = (title: string) => {
+    setCursorGlow((current) => {
+      const next = { ...current };
+      delete next[title];
+      return next;
+    });
   };
 
   const trackOffset =
@@ -214,12 +251,20 @@ export default function Projects({
             >
               {projects.map((project, index) => {
                 const isActive = index === activeIndex;
+                const glow = cursorGlow[project.title];
 
                 return (
                   <article
                     key={project.title}
+                    onMouseMove={(event) =>
+                      handleCardMouseMove(event, project.title)
+                    }
+                    onMouseLeave={() =>
+                      handleCardMouseLeave(project.title)
+                    }
                     style={{
                       position: "relative",
+                      isolation: "isolate",
                       zIndex: isActive ? 10 : 1,
                       transformOrigin: "center center",
                       width: `${cardWidth || 360}px`,
@@ -245,8 +290,33 @@ export default function Projects({
                         : "none",
                     }}
                   >
+                    {/* Cursor-following terracotta glow */}
+                    <div
+                      aria-hidden="true"
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        borderRadius: "inherit",
+                        pointerEvents: "none",
+                        zIndex: 0,
+                        opacity: glow ? 1 : 0,
+                        transition: "opacity 250ms ease",
+                        background: glow
+                          ? `radial-gradient(
+                              220px circle at ${glow.x}px ${glow.y}px,
+                              rgba(180, 106, 85, 0.25) 0%,
+                              rgba(180, 106, 85, 0.12) 35%,
+                              rgba(180, 106, 85, 0.04) 58%,
+                              transparent 75%
+                            )`
+                          : "transparent",
+                      }}
+                    />
+
                     <h3
                       style={{
+                        position: "relative",
+                        zIndex: 1,
                         color: "#0b1320",
                         fontSize: "clamp(17px, 1.8vw, 21px)",
                         lineHeight: 1.45,
@@ -259,6 +329,8 @@ export default function Projects({
 
                     <p
                       style={{
+                        position: "relative",
+                        zIndex: 1,
                         color: "#1f2a44",
                         fontSize: "14px",
                         lineHeight: 1.6,
@@ -270,6 +342,8 @@ export default function Projects({
 
                     <div
                       style={{
+                        position: "relative",
+                        zIndex: 1,
                         display: "flex",
                         flexWrap: "wrap",
                         gap: "7px",
@@ -298,6 +372,8 @@ export default function Projects({
 
                     <div
                       style={{
+                        position: "relative",
+                        zIndex: 1,
                         display: "flex",
                         flexWrap: "wrap",
                         alignItems: "center",
