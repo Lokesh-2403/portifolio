@@ -18,9 +18,9 @@ const PROFILE = {
   status: "Available for opportunities",
   links: [
     { label: "Resume",   href: "/resume.pdf" },
-    { label: "Email",    href: "mailto:you@example.com" },
-    { label: "LinkedIn", href: "https://www.linkedin.com/in/your-handle" },
-    { label: "GitHub",   href: "https://github.com/your-handle" },
+    { label: "Email",    href: "mailto:adusumalli3818@gmail.com" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/lokeshbabuadusumalli" },
+    { label: "GitHub",   href: "https://github.com/Lokesh_2403" },
   ],
 };
 
