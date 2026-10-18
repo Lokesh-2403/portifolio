@@ -1,169 +1,168 @@
+import { useEffect, useRef } from "react";
 
-import { useEffect, useRef, useState } from "react";
-
+/**
+ * Minimal translucent bubble cursor matching the supplied reference:
+ * a small, pale glass sphere with a fine cool-grey rim and soft lower shadow.
+ * It follows the pointer directly to avoid cursor lag.
+ */
 export default function CyberCursor() {
-  const dotRef = useRef<HTMLDivElement>(null);
-  const ringRef = useRef<HTMLDivElement>(null);
-  const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
-  const rippleId = useRef(0);
-  const mouse = useRef({ x: -200, y: -200 });
-  const ringPos = useRef({ x: -200, y: -200 });
-  const rafId = useRef<number>();
-  const [hovering, setHovering] = useState(false);
-  const hoveringRef = useRef(false);
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<number | null>(null);
+  const pointerRef = useRef({ x: -100, y: -100 });
 
   useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      mouse.current = { x: e.clientX, y: e.clientY };
-      if (dotRef.current) {
-        dotRef.current.style.left = e.clientX + "px";
-        dotRef.current.style.top = e.clientY + "px";
+    if (!window.matchMedia("(pointer: fine)").matches) return;
+
+    const root = document.documentElement;
+    root.classList.add("cc-bubble-cursor-enabled");
+
+    const render = () => {
+      frameRef.current = null;
+      const el = cursorRef.current;
+      if (!el) return;
+      const { x, y } = pointerRef.current;
+      el.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+      el.classList.add("is-visible");
+    };
+
+    const onMove = (event: PointerEvent) => {
+      if (event.pointerType === "touch") return;
+      pointerRef.current = { x: event.clientX, y: event.clientY };
+      if (frameRef.current === null) {
+        frameRef.current = window.requestAnimationFrame(render);
       }
     };
 
-    const onDown = (e: MouseEvent) => {
-      const id = rippleId.current++;
-      setRipples(prev => [...prev, { id, x: e.clientX, y: e.clientY }]);
-      setTimeout(() => setRipples(prev => prev.filter(r => r.id !== id)), 800);
-    };
-
-    const onEnter = (e: MouseEvent) => {
-      if ((e.target as HTMLElement).closest("a,button,input,textarea,select,[role='button']")) {
-        hoveringRef.current = true;
-        setHovering(true);
+    const onLeave = (event: PointerEvent) => {
+      if (event.relatedTarget === null) {
+        cursorRef.current?.classList.remove("is-visible");
       }
     };
 
-    const onLeave = (e: MouseEvent) => {
-      if ((e.target as HTMLElement).closest("a,button,input,textarea,select,[role='button']")) {
-        hoveringRef.current = false;
-        setHovering(false);
+    const onEnterControl = (event: MouseEvent) => {
+      const target = event.target;
+      if (target instanceof Element && target.closest("a, button, input, textarea, select, [role='button']")) {
+        cursorRef.current?.classList.add("is-hovering");
       }
     };
 
-    // Smooth lagging ring
-    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-    const animate = () => {
-      ringPos.current.x = lerp(ringPos.current.x, mouse.current.x, 0.1);
-      ringPos.current.y = lerp(ringPos.current.y, mouse.current.y, 0.1);
-      if (ringRef.current) {
-        ringRef.current.style.left = ringPos.current.x + "px";
-        ringRef.current.style.top = ringPos.current.y + "px";
+    const onLeaveControl = (event: MouseEvent) => {
+      const from = event.target;
+      const to = event.relatedTarget;
+      if (!(from instanceof Element)) return;
+      const wasControl = from.closest("a, button, input, textarea, select, [role='button']");
+      const isControl = to instanceof Element
+        ? to.closest("a, button, input, textarea, select, [role='button']")
+        : null;
+      if (wasControl && wasControl !== isControl) {
+        cursorRef.current?.classList.toggle("is-hovering", Boolean(isControl));
       }
-      rafId.current = requestAnimationFrame(animate);
     };
 
-    rafId.current = requestAnimationFrame(animate);
+    const onWindowBlur = () => {
+      cursorRef.current?.classList.remove("is-visible", "is-hovering");
+    };
 
-    document.addEventListener("mousemove", onMove);
-    document.addEventListener("mousedown", onDown);
-    document.addEventListener("mouseover", onEnter);
-    document.addEventListener("mouseout", onLeave);
+    window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("pointerout", onLeave);
+    window.addEventListener("mouseover", onEnterControl);
+    window.addEventListener("mouseout", onLeaveControl);
+    window.addEventListener("blur", onWindowBlur);
 
     return () => {
-      document.removeEventListener("mousemove", onMove);
-      document.removeEventListener("mousedown", onDown);
-      document.removeEventListener("mouseover", onEnter);
-      document.removeEventListener("mouseout", onLeave);
-      if (rafId.current) cancelAnimationFrame(rafId.current);
+      root.classList.remove("cc-bubble-cursor-enabled");
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerout", onLeave);
+      window.removeEventListener("mouseover", onEnterControl);
+      window.removeEventListener("mouseout", onLeaveControl);
+      window.removeEventListener("blur", onWindowBlur);
+      if (frameRef.current !== null) {
+        window.cancelAnimationFrame(frameRef.current);
+      }
     };
   }, []);
 
   return (
     <>
       <style>{`
-        * { cursor: none !important; }
+        html.cc-bubble-cursor-enabled,
+        html.cc-bubble-cursor-enabled * {
+          cursor: none !important;
+        }
 
-        /* Sharp inner dot */
-        .cc-dot {
+        /* The exact reference look: a small, nearly transparent pearl bubble. */
+        .cc-water-bubble {
           position: fixed;
-          width: 5px; height: 5px;
-          background: #b46a55;
-          border-radius: 50%;
-          transform: translate(-50%, -50%);
-          pointer-events: none;
+          top: 0;
+          left: 0;
+          width: 28px;
+          height: 28px;
           z-index: 99999;
-          transition: transform 0.1s ease, background 0.1s ease;
-          box-shadow: 0 0 5px rgba(180,106,85,0.5);
-        }
-        .cc-dot.hovering {
-          transform: translate(-50%, -50%) scale(0);
-        }
-
-        /* Smooth lagging ring */
-        .cc-ring {
-          position: fixed;
-          width: 32px; height: 32px;
-          border-radius: 50%;
-          border: 1.5px solid rgba(199,184,166,0.55);
-          transform: translate(-50%, -50%);
           pointer-events: none;
-          z-index: 99998;
-          transition: width 0.3s ease, height 0.3s ease,
-                      border-color 0.3s ease, background-color 0.3s ease,
-                      box-shadow 0.3s ease;
-        }
-        .cc-ring.hovering {
-          width: 44px; height: 44px;
-          border-color: rgba(180,106,85,0.9);
-          background-color: rgba(180,106,85,0.06);
-          box-shadow: 0 0 12px rgba(180,106,85,0.15);
+          opacity: 0;
+          transform: translate3d(-100px, -100px, 0);
+          will-change: transform, opacity;
+          transition: opacity 100ms ease;
+          filter: drop-shadow(0 3px 4px rgba(42, 55, 64, .20)) drop-shadow(0 0 1px rgba(120, 141, 152, .20));
         }
 
-        /* Shockwave ripple on click */
-        .cc-ripple {
-          position: fixed;
+        .cc-water-bubble.is-visible { opacity: 1; }
+
+        .cc-water-bubble__body {
+          position: absolute;
+          inset: 1px;
           border-radius: 50%;
-          pointer-events: none;
-          z-index: 99997;
-          transform: translate(-50%, -50%);
-          animation: shockwave 0.75s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
-        }
-        .cc-ripple-1 {
-          width: 8px; height: 8px;
-          border: 1.5px solid rgba(180,106,85,0.8);
-          animation-delay: 0s;
-        }
-        .cc-ripple-2 {
-          width: 8px; height: 8px;
-          border: 1px solid rgba(199,184,166,0.5);
-          animation-delay: 0.1s;
-        }
-        .cc-ripple-3 {
-          width: 8px; height: 8px;
-          border: 1px solid rgba(199,184,166,0.25);
-          animation-delay: 0.2s;
+          background: rgba(255, 255, 255, .30);
+          border: 1.35px solid rgba(165, 181, 190, .96);
+          box-shadow:
+            inset 0 1px 1.5px rgba(255, 255, 255, 1),
+            inset 1px 0 1px rgba(255, 255, 255, .92),
+            inset -1px -2px 2px rgba(150, 169, 179, .30),
+            0 0 0 1px rgba(255, 255, 255, .88);
+          background-image:
+            radial-gradient(ellipse 54% 32% at 32% 19%, rgba(255,255,255,.98), transparent 100%),
+            radial-gradient(ellipse 82% 76% at 45% 35%, rgba(255,255,255,.25), rgba(235,241,244,.06) 75%, rgba(183,199,207,.20) 100%);
+          transform: scale(1);
+          transition: transform 180ms cubic-bezier(.2,.7,.25,1), border-color 180ms ease;
         }
 
-        @keyframes shockwave {
-          0%   { transform: translate(-50%,-50%) scale(1); opacity: 1; }
-          100% { transform: translate(-50%,-50%) scale(7); opacity: 0; }
+        /* A delicate second rim and a faint lower crescent add spherical depth. */
+        .cc-water-bubble__body::before {
+          content: "";
+          position: absolute;
+          inset: 2px;
+          border-radius: inherit;
+          border: 1px solid rgba(255, 255, 255, .98);
+          pointer-events: none;
+        }
+
+        .cc-water-bubble__body::after {
+          content: "";
+          position: absolute;
+          left: 4px;
+          right: 4px;
+          bottom: 2px;
+          height: 5px;
+          border-bottom: 1px solid rgba(143, 162, 172, .68);
+          border-radius: 0 0 50% 50%;
+          box-shadow: 0 2px 2px rgba(190, 201, 207, .12);
+          pointer-events: none;
+        }
+
+        .cc-water-bubble.is-hovering .cc-water-bubble__body {
+          transform: scale(1.08);
+          border-color: rgba(137, 158, 169, 1);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .cc-water-bubble,
+          .cc-water-bubble__body { transition: none !important; }
         }
       `}</style>
 
-      {/* Shockwave rings on click */}
-      {ripples.map(r => (
-        <div
-          key={r.id}
-          style={{
-            position: "fixed",
-            left: r.x,
-            top: r.y,
-            pointerEvents: "none",
-            zIndex: 99997
-          }}
-        >
-          <div className="cc-ripple cc-ripple-1" style={{ left: 0, top: 0 }} />
-          <div className="cc-ripple cc-ripple-2" style={{ left: 0, top: 0 }} />
-          <div className="cc-ripple cc-ripple-3" style={{ left: 0, top: 0 }} />
-        </div>
-      ))}
-
-      {/* Lagging ring */}
-      <div ref={ringRef} className={`cc-ring ${hovering ? "hovering" : ""}`} />
-
-      {/* Sharp dot */}
-      <div ref={dotRef} className={`cc-dot ${hovering ? "hovering" : ""}`} />
+      <div ref={cursorRef} className="cc-water-bubble" aria-hidden="true">
+        <div className="cc-water-bubble__body" />
+      </div>
     </>
   );
 }

@@ -81,7 +81,11 @@ const WIDTH_GAMMA    = 0.60;   // <1.0  → gradual, smooth tonal response
 const DETAIL         = 1.45;   // aggressive unsharp-mask → crisp eyes/lips/hair edges
 
 // Limit expensive canvas drawing while the intro lines are moving.
-const FRAME_INTERVAL = 1000 / 30;
+const FRAME_INTERVAL = 1000 / 60;
+
+// Intro-only cursor lens. The lens is disabled completely after reveal.
+const LENS_RADIUS = 105;
+const LENS_PUSH = 0.95;
 
 /* ────────────────────────────────────────────────────────────
    Helpers
@@ -359,9 +363,14 @@ export default function Hero({
     // Animation springs
     sp:  spring(0),   // reveal progress 0→1
     sw:  spring(0),   // drag-wave amplitude
+    sb:  spring(0),   // intro cursor-lens strength
+    scx: spring(-9999), // immediate cursor x (no spring lag)
+    scy: spring(-9999), // immediate cursor y (no spring lag)
     shx: spring(0),   // handle x
     shy: spring(0),   // handle y
     handleReady: false,
+    fine: true,
+    ptr: { x: -9999, y: -9999, active: false },
 
     target: 0 as 0 | 1,
     dragging: false, moved: false,
@@ -391,6 +400,7 @@ export default function Hero({
     if (!section || !canvas) return;
 
     S.reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    S.fine = window.matchMedia("(pointer: fine)").matches;
 
     const rebuild = () => {
       S.geo = buildGeometry(S.img, S.rect, S.N, S.R, THEME.mode);
@@ -420,8 +430,8 @@ export default function Hero({
       // More threads (W/7) → finer portrait resolution
       // Fewer threads look cleaner during the sway intro
       S.N = clamp(Math.round(W / 7), 130, 220);
-      // Slightly fewer vertical samples reduce canvas workload and pointer latency.
-      S.R = clamp(Math.round(H / 3.5), 150, 260);
+      // Slightly fewer vertical samples + 40 FPS balance portrait detail and cursor responsiveness.
+      S.R = clamp(Math.round(H / 4.4), 140, 220);
 
       rebuild();
     };
@@ -446,6 +456,16 @@ export default function Hero({
       const amp  = S.sw.x;
       const wy   = S.dragY * H;
       const sway = S.reduced ? 0 : SWAY;
+
+      // The cursor sphere exists only in the intro. Once revealed, its
+      // strength is zero and the completed portrait remains undistorted.
+      const lens = S.revealed ? 0 : S.sb.x * (1 - 0.2 * eg);
+      const lensOn = lens > 0.01 && S.ptr.active && S.scx.x > -5000;
+      const cx = S.scx.x;
+      const cy = S.scy.x;
+      const radius = LENS_RADIUS;
+      const radius2 = radius * radius;
+      const lensPush = LENS_PUSH * radius * lens;
 
       ctx.beginPath();
 
@@ -472,8 +492,29 @@ export default function Hero({
             }
           }
 
-          xs[r] = xi + (geo.fx[base + r] - xi) * e;
-          ys[r] = y;
+          let px = xi + (geo.fx[base + r] - xi) * e;
+          let py = y;
+
+          // Radially displace the threads around the cursor to create the
+          // spherical bump. Cursor coordinates are direct, not spring-lagged.
+          if (lensOn) {
+            const dx = px - cx;
+            const dy = py - cy;
+            if (dx > -radius && dx < radius && dy > -radius && dy < radius) {
+              const d2 = dx * dx + dy * dy;
+              if (d2 < radius2 && d2 > 0.01) {
+                const d = Math.sqrt(d2);
+                const t = d / radius;
+                const falloff = 1 - t * t;
+                const move = lensPush * t * falloff * falloff;
+                px += (dx / d) * move;
+                py += (dy / d) * move;
+              }
+            }
+          }
+
+          xs[r] = px;
+          ys[r] = py;
           ws[r] = lerp(HAIR, geo.fw[base + r], ew);
         }
 
@@ -505,8 +546,8 @@ export default function Hero({
     const tick = (now: number) => {
       S.raf = 0;
 
-      // The intro is a dense canvas effect. Draw at 30 FPS instead of
-      // rebuilding the large thread path on every 60/120 Hz display frame.
+      // The intro is a dense canvas effect. Draw at a responsive 40 FPS
+      // while using fewer vertical samples to keep pointer movement smooth.
       if (lastPaintAt !== 0 && now - lastPaintAt < FRAME_INTERVAL) {
         S.raf = requestAnimationFrame(tick);
         return;
@@ -533,9 +574,17 @@ export default function Hero({
       const waveTarget = S.target === 1 ? 0 : Math.min(S.dragP, 1) * S.W * 0.18;
       const movingW    = stepSpring(S.sw, waveTarget, S.reduced ? 900 : 90, dt);
 
+      // Fade the intro-only sphere smoothly on hover. It can never activate
+      // once the right-side portrait has been revealed.
+      const lensTarget = !S.revealed && S.ptr.active && !S.dragging && !S.reduced ? 1 : 0;
+      const movingLens = stepSpring(S.sb, lensTarget, 48, dt);
+
       // Reveal the text while the lines finish their morph.
       if (!S.revealed && S.target === 1 && S.sp.x > 0.55) {
         S.revealed = true;
+        S.ptr.active = false;
+        S.sb.x = 0;
+        S.sb.v = 0;
         setRevealed(true);
       } else if (S.revealed && S.target === 0) {
         S.revealed = false;
@@ -545,7 +594,7 @@ export default function Hero({
       draw(now);
       const movingH = updateHandle(dt);
 
-      const settled = S.revealed && !movingP && !movingW && !movingH;
+      const settled = S.revealed && !movingP && !movingW && !movingH && !movingLens;
       if (!settled) S.raf = requestAnimationFrame(tick);
     };
 
@@ -615,6 +664,15 @@ export default function Hero({
     S.downOnInteractive = interactive;
     if (interactive) return;
 
+    if (!S.revealed && S.fine && ev.pointerType !== "touch") {
+      const rect = ev.currentTarget.getBoundingClientRect();
+      S.ptr.x = ev.clientX - rect.left;
+      S.ptr.y = ev.clientY - rect.top;
+      S.scx.x = S.ptr.x;
+      S.scy.x = S.ptr.y;
+      S.ptr.active = true;
+    }
+
     S.dragging = true; S.moved = false;
     S.startX = ev.clientX; S.startY = ev.clientY;
 
@@ -628,6 +686,18 @@ export default function Hero({
   };
 
   const onPointerMove = (ev: ReactPointerEvent<HTMLElement>) => {
+    // Keep the lens centered exactly under the mouse: no spring lag.
+    // Do not restart canvas work for hover movement after reveal.
+    if (!S.revealed && S.fine && ev.pointerType !== "touch") {
+      const rect = ev.currentTarget.getBoundingClientRect();
+      S.ptr.x = ev.clientX - rect.left;
+      S.ptr.y = ev.clientY - rect.top;
+      S.ptr.active = true;
+      S.scx.x = S.ptr.x;
+      S.scy.x = S.ptr.y;
+      kickRef.current();
+    }
+
     if (S.dragging) {
       const dx = ev.clientX - S.startX;
       const dy = ev.clientY - S.startY;
@@ -641,6 +711,11 @@ export default function Hero({
         commit(0);
       }
     }
+  };
+
+  const onPointerLeave = () => {
+    S.ptr.active = false;
+    if (!S.revealed) kickRef.current();
   };
 
   const onPointerUp = (ev: ReactPointerEvent<HTMLElement>) => {
@@ -671,6 +746,7 @@ export default function Hero({
       ref={sectionRef}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
+      onPointerLeave={onPointerLeave}
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
       className={`hero-intro${revealed ? " is-revealed" : ""}`}
