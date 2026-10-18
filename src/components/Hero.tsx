@@ -20,7 +20,7 @@ const PROFILE = {
     { label: "Resume",   href: "/resume.pdf" },
     { label: "Email",    href: "mailto:adusumalli3818@gmail.com" },
     { label: "LinkedIn", href: "https://www.linkedin.com/in/lokeshbabuadusumalli" },
-    { label: "GitHub",   href: "https://github.com/Lokesh_2403" },
+    { label: "GitHub",   href: "https://github.com/Lokesh-2403" },
   ],
 };
 
